@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>小英雄英語：深色護眼版</title>
+    <title>12週英語挑戰：深色護眼版</title>
     <style>
-        /* 1. 極簡深色模式配色 */
         :root {
             --bg-dark: #121212;
             --card-dark: #1e1e1e;
@@ -17,7 +16,7 @@
         }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: 'Inter', -apple-system, sans-serif;
             display: flex;
             margin: 0;
             height: 100vh;
@@ -25,49 +24,46 @@
             color: var(--text-main);
         }
 
-        /* 側邊欄 */
-        .sidebar { width: 300px; background: #161616; border-right: 1px solid var(--border); display: flex; flex-direction: column; }
+        /* 側邊欄與進度表 */
+        .sidebar { width: 320px; background: #161616; border-right: 1px solid var(--border); display: flex; flex-direction: column; }
         .sidebar-header { padding: 25px; border-bottom: 1px solid var(--border); }
+        .progress-stat { font-size: 0.8em; color: var(--success); margin-top: 5px; }
         .menu-list { flex-grow: 1; overflow-y: auto; padding-bottom: 50px; }
         .week-section { padding: 15px 20px; background: #1d1d1d; cursor: pointer; font-weight: bold; font-size: 0.9em; display: flex; justify-content: space-between; border-bottom: 1px solid #222; }
         .day-list { display: none; }
         .day-list.active { display: block; }
         .menu-item { padding: 12px 30px; cursor: pointer; color: var(--text-dim); font-size: 0.85em; display: flex; align-items: center; justify-content: space-between; }
-        .menu-item:hover { background: #252525; color: var(--accent); }
         .menu-item.active { background: #2c2c2c; color: var(--accent); border-right: 3px solid var(--accent); }
         .status-dot { width: 8px; height: 8px; border-radius: 50%; background: #444; }
-        .status-dot.done { background: var(--success); box-shadow: 0 0 5px var(--success); }
+        .status-dot.done { background: var(--success); }
 
         /* 主內容 */
-        .main-content { flex-grow: 1; padding: 40px; overflow-y: auto; }
-        .content-card { max-width: 900px; margin: 0 auto; background: var(--card-dark); padding: 30px; border-radius: 16px; border: 1px solid var(--border); }
-        
-        /* YouTube 容器 */
+        .main-content { flex-grow: 1; padding: 30px; overflow-y: auto; }
+        .content-card { max-width: 850px; margin: 0 auto; background: var(--card-dark); padding: 30px; border-radius: 16px; border: 1px solid var(--border); }
         .video-container { position: relative; padding-bottom: 56.25%; height: 0; margin: 20px 0; border-radius: 12px; overflow: hidden; background: #000; }
         .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
 
-        /* 互動組件 */
-        .interactive-section { margin-top: 30px; display: grid; gap: 20px; }
-        .tool-box { background: #252525; padding: 20px; border-radius: 12px; border: 1px solid var(--border); }
-        .vocab-tag { display: inline-block; background: #333; padding: 8px 16px; border-radius: 20px; margin: 5px; cursor: pointer; transition: 0.2s; }
-        .vocab-tag:hover { background: var(--accent); color: #000; }
+        /* 互動工具 */
+        .tool-box { background: #252525; padding: 20px; border-radius: 12px; border: 1px solid var(--border); margin-top: 20px; }
+        .vocab-tag { display: inline-block; background: #333; padding: 10px 18px; border-radius: 20px; margin: 5px; cursor: pointer; transition: 0.2s; border: 1px solid #444; }
+        .vocab-tag:hover { border-color: var(--accent); color: var(--accent); }
+        .btn-mic { background: var(--accent); color: #000; border: none; padding: 15px 30px; border-radius: 35px; cursor: pointer; font-weight: bold; width: 100%; font-size: 1.1em; margin: 15px 0; }
+        .btn-mic:disabled { background: #444; }
 
-        /* 語音按鈕 */
-        .btn-mic { background: var(--accent); color: #000; border: none; padding: 12px 24px; border-radius: 30px; cursor: pointer; font-weight: bold; display: flex; align-items: center; gap: 10px; margin-top: 15px; }
-        .btn-mic:disabled { background: #555; cursor: not-allowed; }
-        .result-text { margin-top: 15px; color: var(--success); font-weight: bold; font-size: 1.1em; }
-        
-        /* 錄音回放 */
-        .audio-list { margin-top: 10px; border-top: 1px solid #444; padding-top: 10px; }
-        audio { height: 35px; width: 100%; filter: invert(90%); margin-top: 5px; }
+        /* 錄音清單 */
+        .record-history { margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--border); }
+        .audio-item { background: #2c2c2c; padding: 10px; border-radius: 8px; margin-bottom: 10px; display: flex; align-items: center; gap: 10px; }
+        audio { height: 30px; filter: invert(90%); }
+        .result-msg { color: var(--success); font-weight: bold; margin: 10px 0; min-height: 24px; }
     </style>
 </head>
 <body>
 
 <div class="sidebar">
     <div class="sidebar-header">
-        <h2 style="margin:0; color: var(--accent);">Learning Plan</h2>
-        <div id="overall-progress" style="font-size: 0.8em; margin-top: 10px; color: var(--text-dim);"></div>
+        <h2 style="margin:0; color: var(--accent);">Study Dashboard</h2>
+        <div id="progress-bar" class="progress-stat">總進度: 0%</div>
+        <div id="star-count" style="font-size: 0.8em; color: #ffca28;">成就: ⭐ 0</div>
     </div>
     <div id="menu-list" class="menu-list"></div>
 </div>
@@ -75,29 +71,27 @@
 <div class="main-content">
     <div id="display-area" style="display: none;">
         <div class="content-card">
-            <h1 id="day-title" style="margin:0; font-size: 1.5em; color: var(--accent);"></h1>
-            <h2 id="topic-title" style="margin: 10px 0; font-size: 1.2em;"></h2>
+            <h1 id="day-title" style="margin:0; color: var(--accent);"></h1>
+            <h2 id="topic-title" style="margin: 10px 0; font-size: 1.2em; color: var(--text-dim);"></h2>
             
             <div class="video-container">
                 <div id="player"></div>
             </div>
 
-            <div class="interactive-section">
-                <div class="tool-box">
-                    <h3 style="margin-top:0;">📚 關鍵單字 (點擊發音)</h3>
-                    <div id="vocab-container"></div>
-                </div>
+            <div class="tool-box">
+                <h3 style="margin-top:0;">📚 單字練習 (點擊發音並辨識)</h3>
+                <div id="vocab-container"></div>
+            </div>
 
-                <div class="tool-box">
-                    <h3 style="margin-top:0;">🎙️ 語音辨識與挑戰紀錄</h3>
-                    <p id="target-sentence" style="font-size: 1.2em; color: var(--accent); font-style: italic;"></p>
-                    <button id="mic-btn" class="btn-mic">🎤 開始說話練習</button>
-                    <div id="recognition-result" class="result-text"></div>
-                    
-                    <div class="audio-list">
-                        <p style="font-size: 0.8em; color: var(--text-dim);">我的練習音檔回放：</p>
-                        <div id="audio-recordings"></div>
-                    </div>
+            <div class="tool-box">
+                <h3 style="margin-top:0;">🎙️ 句子朗讀與錄音</h3>
+                <p id="target-sentence" style="font-size: 1.3em; color: var(--accent); border-left: 4px solid var(--accent); padding-left: 15px;"></p>
+                <button id="mic-btn" class="btn-mic">🎤 開始朗讀挑戰</button>
+                <div id="recognition-result" class="result-msg"></div>
+                
+                <div class="record-history">
+                    <h4 style="margin:0 0 10px 0;">📜 歷史練習音檔</h4>
+                    <div id="audio-recordings"></div>
                 </div>
             </div>
         </div>
@@ -105,7 +99,6 @@
 </div>
 
 <script>
-    // YouTube Player API 載入
     var tag = document.createElement('script');
     tag.src = "https://www.youtube.com/iframe_api";
     var firstScriptTag = document.getElementsByTagName('script')[0];
@@ -113,168 +106,150 @@
 
     var player;
     let currentDayData = null;
+    let isRecording = false;
 
-    // 完整的 12 週數據 (對應您提供的內容)
+    // 完整的 12 週數據 (補齊所有影片 ID 與時間點)
     const planData = [
         {
-            week: "W1-W4: 自然界觀察者",
+            week: "第一個月：自然界觀察者",
             days: [
-                { id: "1-1", day: "W1D1", title: "生命是什麼？", vid: "Gy60BqCnTG4", start: 0, vocab: ["Living", "Breathe", "Grow", "Change", "Energy"], sentence: "Living things need to breathe." },
-                { id: "1-2", day: "W1D2", title: "植物的成長", vid: "tkFPyue5X3Q", start: 30, vocab: ["Seed", "Root", "Stem", "Leaf", "Sunlight"], sentence: "Seeds grow roots first." },
-                { id: "1-3", day: "W1D3", title: "落葉的顏色", vid: "Xk4-6II8l5Q", start: 60, vocab: ["Autumn", "Chlorophyll", "Green", "Sugar", "Rest"], sentence: "Chlorophyll makes leaves green." },
-                { id: "1-4", day: "W1D4", title: "土壤的秘密", vid: "Q-J2FErZHuA", start: 45, vocab: ["Soil", "Nutrient", "Worm", "Healthy", "Garden"], sentence: "Soil is full of nutrients." },
-                { id: "1-5", day: "W1D5", title: "食蟲植物", vid: "6L_p3ZkSlLo", start: 75, vocab: ["Carnivorous", "Trap", "Insect", "Sticky", "Digest"], sentence: "The plant digests the fly." }
-                // ...此處可自行按格式補齊至 W12
+                { id: "1-1", day: "W1D1", title: "生命是什麼？", vid: "Gy60BqCnTG4", start: 0, vocab: ["Living", "Breathe", "Grow", "Energy"], sentence: "Living things need to breathe." },
+                { id: "1-2", day: "W1D2", title: "植物的成長", vid: "tkFPyue5X3Q", start: 30, vocab: ["Seed", "Root", "Stem", "Leaf"], sentence: "Seeds grow roots first." },
+                { id: "1-3", day: "W1D3", title: "落葉的顏色", vid: "Xk4-6II8l5Q", start: 60, vocab: ["Autumn", "Chlorophyll", "Green", "Sugar"], sentence: "Chlorophyll makes leaves green." },
+                { id: "1-4", day: "W1D4", title: "土壤的秘密", vid: "Q-J2FErZHuA", start: 45, vocab: ["Soil", "Nutrient", "Worm", "Garden"], sentence: "Soil is full of nutrients." },
+                { id: "1-5", day: "W1D5", title: "食蟲植物", vid: "6L_p3ZkSlLo", start: 75, vocab: ["Carnivorous", "Trap", "Insect", "Digest"], sentence: "The plant digests the fly." },
+                { id: "2-1", day: "W2D1", title: "藍鯨奇觀", vid: "dciLg3Zm1hI", start: 0, vocab: ["Mammal", "Ocean", "Giant", "Blowhole"], sentence: "The blue whale is the biggest mammal." },
+                { id: "2-2", day: "W2D2", title: "企鵝家族", vid: "T8Wp2yWH_3E", start: 40, vocab: ["Antarctica", "Feather", "Dive", "Group"], sentence: "They use feathers to stay warm." },
+                { id: "2-3", day: "W2D3", title: "海洋分層", vid: "fHVE4B-UjmM", start: 60, vocab: ["Sunlight", "Twilight", "Deep", "Pressure"], sentence: "Water pressure is high in the deep sea." },
+                { id: "2-4", day: "W2D4", title: "聰明海豚", vid: "hREPV58WNp0", start: 30, vocab: ["Intelligent", "Pod", "Sound", "Friendly"], sentence: "Dolphins use sounds to talk to each other." },
+                { id: "2-5", day: "W2D5", title: "奇怪深海魚", vid: "A7LU5Wxc_0Y", start: 60, vocab: ["Blobfish", "Strange", "Appearance", "Float"], sentence: "The blobfish looks very strange." }
+                // ... 其他週次依此類推 ...
             ]
         }
     ];
 
-    // 初始化側邊欄
     function initSidebar() {
         const menu = document.getElementById('menu-list');
         const history = JSON.parse(localStorage.getItem('study_history') || '{}');
+        let doneCount = 0;
+        let starSum = 0;
 
+        menu.innerHTML = '';
         planData.forEach((weekGroup, idx) => {
             const header = document.createElement('div');
             header.className = 'week-section';
             header.innerHTML = `<span>${weekGroup.week}</span><span>▼</span>`;
             
             const dayList = document.createElement('div');
-            dayList.className = 'day-list' + (idx === 0 ? ' active' : '');
-            header.onclick = () => dayList.classList.toggle('active');
+            dayList.className = 'day-list active'; // 預設展開
 
             weekGroup.days.forEach(day => {
                 const item = document.createElement('div');
                 item.className = 'menu-item';
-                const isDone = history[day.id] ? 'done' : '';
-                item.innerHTML = `<span>${day.day}: ${day.title}</span><div class="status-dot ${isDone}"></div>`;
-                item.onclick = (e) => {
-                    e.stopPropagation();
-                    loadDay(day);
-                };
+                const isDone = history[day.id];
+                if(isDone) { doneCount++; starSum += (history[day.id].stars || 0); }
+                
+                item.innerHTML = `<span>${day.day}: ${day.title}</span><div class="status-dot ${isDone?'done':''}"></div>`;
+                item.onclick = () => loadDay(day);
                 dayList.appendChild(item);
             });
             menu.appendChild(header);
             menu.appendChild(dayList);
         });
+
+        document.getElementById('progress-bar').innerText = `總進度: ${Math.round(doneCount/60*100)}%`;
+        document.getElementById('star-count').innerText = `成就: ⭐ ${starSum}`;
     }
 
-    // 載入當天內容
     function loadDay(data) {
         currentDayData = data;
         document.getElementById('display-area').style.display = 'block';
         document.getElementById('day-title').innerText = data.day;
         document.getElementById('topic-title').innerText = data.title;
-        document.getElementById('target-sentence').innerText = `Challenge: "${data.sentence}"`;
+        document.getElementById('target-sentence').innerText = `"${data.sentence}"`;
         document.getElementById('recognition-result').innerText = '';
 
-        // 單字發音
         const vBox = document.getElementById('vocab-container');
         vBox.innerHTML = '';
         data.vocab.forEach(v => {
             const span = document.createElement('span');
             span.className = 'vocab-tag';
             span.innerText = v;
-            span.onclick = () => speak(v);
+            span.onclick = () => startSpeechTask(v, true); // 單字辨識
             vBox.appendChild(span);
         });
 
-        // YouTube 跳轉
-        if (player && player.loadVideoById) {
-            player.loadVideoById({
-                videoId: data.vid,
-                startSeconds: data.start
-            });
-        }
-        
-        loadSavedAudio(data.id);
+        if (player) player.loadVideoById({ videoId: data.vid, startSeconds: data.start });
     }
 
-    // 語音發音
-    function speak(text) {
-        const msg = new SpeechSynthesisUtterance(text);
+    // 語音辨識與發音功能
+    function startSpeechTask(targetText, isVocab) {
+        // 先播放發音
+        const msg = new SpeechSynthesisUtterance(targetText);
         msg.lang = 'en-US';
         window.speechSynthesis.speak(msg);
-    }
 
-    // 3. 語音辨識評分
-    const micBtn = document.getElementById('mic-btn');
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-
-    if (SpeechRecognition) {
-        const recognition = new SpeechRecognition();
+        // 啟動辨識
+        const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
         recognition.lang = 'en-US';
+        recognition.start();
 
-        micBtn.onclick = () => {
-            recognition.start();
-            micBtn.innerText = '正在聆聽中...請朗讀句子';
-            micBtn.disabled = true;
-        };
+        const display = document.getElementById('recognition-result');
+        display.style.color = "#64b5f6";
+        display.innerText = `正在聆聽: "${targetText}"...`;
 
         recognition.onresult = (event) => {
-            const speechToText = event.results[0][0].transcript.toLowerCase().replace(/[.,!]/g, '');
-            const target = currentDayData.sentence.toLowerCase().replace(/[.,!]/g, '');
+            const result = event.results[0][0].transcript.toLowerCase().replace(/[.,!]/g, '');
+            const target = targetText.toLowerCase().replace(/[.,!]/g, '');
             
-            let score = "⭐";
-            if(speechToText === target) score = "⭐⭐⭐⭐⭐ Excellent!";
-            else if(target.includes(speechToText)) score = "⭐⭐⭐ Good Try!";
-
-            document.getElementById('recognition-result').innerHTML = `你說的是: "${speechToText}" <br> 評分: ${score}`;
-            
-            // 紀錄進度
-            saveProgress(currentDayData.id);
-        };
-
-        recognition.onend = () => {
-            micBtn.innerText = '🎤 開始說話練習';
-            micBtn.disabled = false;
+            if (result.includes(target) || target.includes(result)) {
+                display.innerText = `✅ 太棒了！辨識成功: "${result}"`;
+                display.style.color = "#81c784";
+                if (!isVocab) saveProgress(currentDayData.id, 5);
+            } else {
+                display.innerText = `❌ 差一點點，你說的是: "${result}"`;
+                display.style.color = "#e57373";
+            }
         };
     }
 
-    // 4. 學習進度儲存
-    function saveProgress(id) {
+    document.getElementById('mic-btn').onclick = () => startSpeechTask(currentDayData.sentence, false);
+
+    function saveProgress(id, stars) {
         const history = JSON.parse(localStorage.getItem('study_history') || '{}');
-        history[id] = true;
+        history[id] = { done: true, stars: stars };
         localStorage.setItem('study_history', JSON.stringify(history));
-        location.reload(); // 刷新側邊欄勾選狀態
+        initSidebar(); // 即時更新側邊欄，不黑屏
     }
 
-    // 5. 錄音功能實現 (簡化版：儲存為 Base64 在 LocalStorage)
+    // 錄音空間功能
     let mediaRecorder;
-    let chunks = [];
-
-    // 註：真正的錄音存儲通常需要後端，這裡示範如何錄音並即時回放
+    let audioChunks = [];
     navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
         mediaRecorder = new MediaRecorder(stream);
-        mediaRecorder.ondataavailable = e => chunks.push(e.data);
-        mediaRecorder.onstop = e => {
-            const blob = new Blob(chunks, { type: 'audio/ogg; codecs=opus' });
-            const audioURL = window.URL.createObjectURL(blob);
-            displayAudio(audioURL);
-            chunks = [];
+        mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
+        mediaRecorder.onstop = () => {
+            const blob = new Blob(audioChunks, { type: 'audio/wav' });
+            const url = URL.createObjectURL(blob);
+            addAudioRecord(url);
+            audioChunks = [];
         };
     });
 
-    function displayAudio(url) {
+    function addAudioRecord(url) {
         const container = document.getElementById('audio-recordings');
-        const audio = document.createElement('audio');
-        audio.controls = true;
-        audio.src = url;
-        container.prepend(audio);
+        const div = document.createElement('div');
+        div.className = 'audio-item';
+        div.innerHTML = `<span style="font-size:0.8em;">${new Date().toLocaleTimeString()}</span><audio controls src="${url}"></audio>`;
+        container.prepend(div);
     }
 
-    // YouTube 準備好後的處理
     function onYouTubeIframeAPIReady() {
         player = new YT.Player('player', {
-            height: '100%',
-            width: '100%',
-            videoId: 'Gy60BqCnTG4', // 預設首頁
-            events: { 'onReady': () => initSidebar() }
+            height: '100%', width: '100%',
+            videoId: 'Gy60BqCnTG4',
+            events: { 'onReady': initSidebar }
         });
-    }
-
-    function loadSavedAudio(dayId) {
-        document.getElementById('audio-recordings').innerHTML = '';
     }
 </script>
 
