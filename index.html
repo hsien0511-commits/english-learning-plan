@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>12週英語挑戰：進階美化版</title>
+    <title>小英雄 12 週英語挑戰：進階美化版</title>
     <style>
         :root {
             --bg: #0f1114; --sidebar: #16181d; --card: rgba(30, 34, 42, 0.7);
@@ -11,38 +11,47 @@
             --text: #e0e0e0; --dim: #94a3b8; --success: #81c784;
             --danger: #ff5252; --border: rgba(255, 255, 255, 0.08);
         }
+
         body { font-family: 'Inter', 'PingFang TC', sans-serif; background: var(--bg); color: var(--text); display: flex; margin: 0; height: 100vh; overflow: hidden; }
+
         .sidebar { width: 320px; background: var(--sidebar); border-right: 1px solid var(--border); display: flex; flex-direction: column; }
         .sidebar-header { padding: 25px; border-bottom: 1px solid var(--border); }
+
         .progress-box { background: #1e222a; padding: 18px; border-radius: 12px; margin-top: 15px; border: 1px solid var(--border); }
         .progress-bar-bg { background: #334155; height: 8px; border-radius: 4px; overflow: hidden; position: relative; }
         .progress-bar-fill { background: linear-gradient(90deg, #42a5f5, #90caf9); height: 100%; transition: width 0.8s cubic-bezier(0.34, 1.56, 0.64, 1); position: relative; }
         .progress-bar-fill::after { content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent); animation: shine 3s infinite; }
         @keyframes shine { to { left: 150%; } }
-        .menu-list { flex-grow: 1; overflow-y: auto; }
+
+        .menu-list { flex-grow: 1; overflow-y: auto; scrollbar-width: thin; }
         .week-title { padding: 15px 20px; background: rgba(255,255,255,0.03); font-size: 0.8em; letter-spacing: 1px; color: var(--dim); }
         .day-item { padding: 14px 25px; font-size: 0.9em; cursor: pointer; transition: 0.3s; display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.02); }
         .day-item.active { background: rgba(100, 181, 246, 0.1); color: var(--accent); border-left: 4px solid var(--accent); }
         .status-dot { width: 8px; height: 8px; border-radius: 50%; background: #444; align-self: center; }
         .status-dot.done { background: var(--success); }
+
         .main { flex-grow: 1; overflow-y: auto; padding: 40px; }
         .container { max-width: 850px; margin: 0 auto; }
         .video-box { width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 12px; overflow: hidden; margin-bottom: 30px; border: 1px solid var(--border); }
+        
         .task-card { background: var(--card); backdrop-filter: blur(12px); border-radius: 16px; padding: 25px; margin-bottom: 25px; border: 1px solid var(--border); box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
         .sentence-text { font-size: 1.3em; color: var(--accent); margin: 15px 0; font-weight: 500; text-shadow: 0 0 10px var(--accent-glow); }
+
         button { border: none; padding: 10px 20px; border-radius: 10px; cursor: pointer; font-weight: 600; transition: 0.2s; }
         .btn-play { background: #334155; color: white; margin-right: 10px; }
         .btn-rec { background: var(--accent); color: #0f1114; }
         .btn-rec.recording { background: var(--danger); color: white; animation: pulse-red 1.5s infinite; }
         @keyframes pulse-red { 0% { box-shadow: 0 0 0 0 rgba(239, 83, 80, 0.7); } 70% { box-shadow: 0 0 0 15px rgba(239, 83, 80, 0); } 100% { box-shadow: 0 0 0 0 rgba(239, 83, 80, 0); } }
+
         .audio-item { background: rgba(255, 255, 255, 0.03); padding: 20px; border-radius: 14px; margin-bottom: 15px; border: 1px solid var(--border); display: flex; flex-direction: column; gap: 10px; }
-        audio { height: 35px; width: 100%; filter: invert(90%) hue-rotate(180deg) brightness(1.2); }
+        audio { height: 35px; width: calc(100% - 50px); filter: invert(90%) hue-rotate(180deg) brightness(1.2); }
         .btn-delete { background: transparent; color: var(--dim); align-self: flex-end; }
         .vocab-list { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
         .vocab-item { background: rgba(255,255,255,0.05); padding: 4px 12px; border-radius: 15px; font-size: 0.85em; display: flex; align-items: center; gap: 5px; }
     </style>
 </head>
 <body>
+
 <div class="sidebar">
     <div class="sidebar-header">
         <h3 style="margin:0">English Learning</h3>
@@ -53,6 +62,7 @@
     </div>
     <div id="menu" class="menu-list"></div>
 </div>
+
 <div class="main">
     <div id="content" style="display:none" class="container">
         <h2 id="day-label" style="margin:0; color:var(--accent)"></h2>
@@ -65,17 +75,12 @@
         </div>
     </div>
 </div>
+
 <script>
     let player, db, isRecording = false;
     const Recognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 
-    const request = indexedDB.open("EnglishStudioDB", 3);
-    request.onupgradeneeded = e => {
-        db = e.target.result;
-        if (!db.objectStoreNames.contains("recordings")) db.createObjectStore("recordings", { keyPath: "id", autoIncrement: true });
-    };
-    request.onsuccess = e => { db = e.target.result; loadHistory(); renderSidebar(); };
-
+    // 資料初始化與側邊欄顯示
     const planData = [
         {
             week: "第一個月：自然界觀察者",
@@ -166,8 +171,7 @@
                 di.onclick = () => loadDay(d); menu.appendChild(di);
             });
         });
-        const totalDays = 60; // 12週 x 5天學習日
-        const percent = Math.min(Math.round((history.length / totalDays) * 100), 100);
+        const totalDays = 60; const percent = Math.min(Math.round((history.length / totalDays) * 100), 100);
         document.getElementById('progress-text').innerText = `已完成 ${history.length} 天 / ${totalDays} 天 (${percent}%)`;
         document.getElementById('progress-fill').style.width = percent + '%';
     }
@@ -200,14 +204,14 @@
         isRecording = true; btn.classList.add('recording'); btn.innerText = "🛑 評分中...";
         let finalScore = "⭐", recognizedText = "";
         if (Recognition) {
-            const recognition = new Recognition(); recognition.lang = 'en-US';
-            recognition.onresult = e => { 
+            const rec = new Recognition(); rec.lang = 'en-US';
+            rec.onresult = e => { 
                 recognizedText = e.results[0][0].transcript.toLowerCase(); 
                 const target = targetText.toLowerCase().replace(/[.,!?]/g, '');
                 if (recognizedText === target) finalScore = "⭐⭐⭐⭐⭐ (Perfect!)";
                 else if (target.includes(recognizedText)) finalScore = "⭐⭐⭐ (Good)";
             };
-            recognition.start();
+            rec.start();
         }
         navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
             mediaRecorder = new MediaRecorder(stream); chunks = [];
@@ -224,13 +228,14 @@
     function saveRecord(blob, label, score, transcript) {
         const reader = new FileReader(); reader.readAsDataURL(blob);
         reader.onloadend = () => {
-            const transaction = db.transaction(["recordings"], "readwrite");
-            transaction.objectStore("recordings").add({ label, score, transcript, data: reader.result, time: new Date().toLocaleString() });
-            transaction.oncomplete = () => loadHistory();
+            const tx = db.transaction(["recordings"], "readwrite");
+            tx.objectStore("recordings").add({ label, score, transcript, data: reader.result, time: new Date().toLocaleString() });
+            tx.oncomplete = () => loadHistory();
         };
     }
 
     function loadHistory() {
+        if(!db) return;
         const list = document.getElementById('history-list'); list.innerHTML = '';
         const store = db.transaction("recordings").objectStore("recordings");
         store.openCursor(null, "prev").onsuccess = e => {
@@ -243,9 +248,10 @@
         };
     }
 
-    function deleteRecord(id) { if(confirm("刪除這筆紀錄？")) { db.transaction(["recordings"], "readwrite").objectStore("recordings").delete(id).oncomplete = () => loadHistory(); } }
+    function deleteRecord(id) { if(confirm("刪除紀錄？")) { db.transaction(["recordings"], "readwrite").objectStore("recordings").delete(id).oncomplete = () => loadHistory(); } }
 
     function onYouTubeIframeAPIReady() { player = new YT.Player('player', { height: '100%', width: '100%', videoId: 'Gy60BqCnTG4' }); }
+    const tag = document.createElement('script'); tag.src = "https://www.youtube.com/iframe_api"; document.head.appendChild(tag);
 </script>
 </body>
 </html>
