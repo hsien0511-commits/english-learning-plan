@@ -127,5 +127,26 @@
 
     renderList();
 </script>
+    // 確保網頁載入後執行
+document.addEventListener('DOMContentLoaded', () => {
+    fetch('data.json')
+        .then(response => {
+            if (!response.ok) throw new Error('找不到 data.json 檔案');
+            return response.json();
+        })
+        .then(data => {
+            const listContainer = document.querySelector('.sidebar'); // 或是您設定的 id
+            // 清除舊有的內容並建立新列表
+            const ul = document.createElement('ul');
+            data.weeks.forEach(week => {
+                const li = document.createElement('li');
+                li.innerHTML = `<button onclick="showContent(${week.id})">${week.title}</button>`;
+                ul.appendChild(li);
+            });
+            listContainer.appendChild(ul);
+        })
+        .catch(err => console.error('錯誤:', err));
+});
 </body>
+
 </html>
