@@ -1,4 +1,415 @@
-<!DOCTYPE html>
+<!DOCTYPE html><!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>12週英語挑戰：評分管理版</title>
+    <style>
+        :root {
+            --bg: #121212; --card: #1e1e1e; --accent: #64b5f6; --text: #e0e0e0;
+            --dim: #9e9e9e; --success: #81c784; --border: #333; --danger: #ef5350;
+        }
+        body { font-family: 'PingFang TC', sans-serif; background: var(--bg); color: var(--text); display: flex; margin: 0; height: 100vh; overflow: hidden; }
+        
+        /* 側邊欄 */
+        .sidebar { width: 320px; border-right: 1px solid var(--border); display: flex; flex-direction: column; background: #161616; }
+        .sidebar-header { padding: 20px; border-bottom: 1px solid var(--border); }
+        .progress-box { background: #252525; padding: 15px; border-radius: 10px; margin-top: 10px; }
+        .progress-text { font-size: 0.85em; color: var(--accent); margin-bottom: 5px; }
+        .progress-bar-bg { background: #444; height: 6px; border-radius: 3px; overflow: hidden; }
+        .progress-bar-fill { background: var(--accent); height: 100%; transition: width 0.3s; }
+
+        .menu-list { flex-grow: 1; overflow-y: auto; }
+        .week-title { padding: 12px 20px; background: #222; font-size: 0.9em; font-weight: bold; color: var(--dim); }
+        .day-item { padding: 12px 25px; font-size: 0.85em; cursor: pointer; display: flex; justify-content: space-between; border-bottom: 1px solid #222; }
+        .day-item.active { background: #333; color: var(--accent); border-left: 4px solid var(--accent); }
+        .status-dot { width: 8px; height: 8px; border-radius: 50%; background: #444; align-self: center; }
+        .status-dot.done { background: var(--success); }
+
+        /* 主區域 */
+        .main { flex-grow: 1; overflow-y: auto; padding: 40px; }
+        .container { max-width: 800px; margin: 0 auto; }
+        .video-box { width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 12px; overflow: hidden; margin-bottom: 30px; border: 1px solid var(--border); }
+        
+        /* 學習區塊 */
+        .task-card { background: var(--card); border-radius: 12px; padding: 20px; margin-bottom: 20px; border: 1px solid var(--border); }
+        .sentence-text { font-size: 1.2em; color: var(--accent); margin: 10px 0; font-style: italic; }
+        .btn-group { display: flex; gap: 10px; margin-top: 15px; }
+        button { border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: bold; display: flex; align-items: center; gap: 6px; transition: 0.2s; }
+        .btn-play { background: #444; color: white; }
+        .btn-rec { background: var(--accent); color: #000; }
+        .btn-rec.recording { background: var(--danger); animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
+
+        /* 歷史紀錄與評分 */
+        .history-box { margin-top: 30px; border-top: 1px solid var(--border); padding-top: 20px; }
+        .audio-item { background: #252525; padding: 15px; border-radius: 10px; margin-bottom: 12px; position: relative; border: 1px solid #333; }
+        .audio-info { font-size: 0.8em; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
+        .score-tag { color: #ffca28; font-weight: bold; font-size: 1.1em; }
+        .btn-delete { background: none; color: var(--dim); padding: 5px; font-size: 1.2em; }
+        .btn-delete:hover { color: var(--danger); }
+        audio { height: 35px; width: calc(100% - 40px); filter: invert(90%); }
+        
+        .vocab-list { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 15px; }
+        .vocab-item { background: #333; padding: 5px 10px; border-radius: 15px; font-size: 0.85em; display: flex; align-items: center; gap: 5px; }
+    </style>
+</head>
+<body>
+
+<div class="sidebar">
+    <div class="sidebar-header">
+        <h3 style="margin:0">English Studio</h3>
+        <div class="progress-box">
+            <div id="progress-text" class="progress-text">已完成 0 天 / 84 天 (0%)</div>
+            <div class="progress-bar-bg"><div id="progress-fill" class="progress-bar-fill" style="width:0%"></div></div>
+        </div>
+    </div>
+    <div id="menu" class="menu-list"></div>
+</div>
+
+<div class="main">
+    <div id="content" style="display:none" class="container">
+        <h2 id="day-label" style="margin:0; color:var(--accent)"></h2>
+        <h1 id="day-topic" style="margin: 10px 0 20px 0"></h1>
+
+        <div class="video-box"><div id="player"></div></div>
+
+        <div id="tasks-container"></div>
+
+        <div class="history-box">
+            <h3>📜 歷史評分與音檔</h3>
+            <div id="history-list"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let player, db, isRecording = false;
+    const Recognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+    // IndexedDB 初始化
+    const request = indexedDB.open("EnglishStudioDB", 2);
+    request.onupgradeneeded = e => {
+        db = e.target.result;
+        if (!db.objectStoreNames.contains("recordings")) {
+            db.createObjectStore("recordings", { keyPath: "id", autoIncrement: true });
+        }
+    };
+    request.onsuccess = e => { db = e.target.result; loadHistory(); };
+
+    // 數據範例 (補齊格式)
+    // 補齊 12 週完整學習數據
+const planData = [
+    {
+        week: "第一個月：自然界之觀察者",
+        days: [
+            { id: "w1d1", label: "W1D1", topic: "生命是什麼？", vid: "Gy60BqCnTG4", start: 0, 
+              tasks: [
+                { sentence: "Living things need to breathe.", vocab: ["Living", "Breathe"] },
+                { sentence: "A rock cannot grow.", vocab: ["Rock", "Grow"] },
+                { sentence: "All living things change over time.", vocab: ["Change", "Energy"] }
+              ] 
+            },
+            { id: "w1d2", label: "W1D2", topic: "植物的成長", vid: "tkFPyue5X3Q", start: 30, 
+              tasks: [
+                { sentence: "Seeds grow roots first.", vocab: ["Seed", "Root"] },
+                { sentence: "The stem helps the plant stand up.", vocab: ["Stem", "Stand"] },
+                { sentence: "Leaves need sunlight to make food.", vocab: ["Leaf", "Sunlight"] }
+              ] 
+            },
+            { id: "w1d3", label: "W1D3", topic: "落葉的顏色", vid: "Xk4-6II8l5Q", start: 60, 
+              tasks: [
+                { sentence: "Chlorophyll makes leaves green.", vocab: ["Autumn", "Chlorophyll"] },
+                { sentence: "Trees rest during the winter.", vocab: ["Green", "Rest"] },
+                { sentence: "Leaves turn red and orange in autumn.", vocab: ["Sugar", "Autumn"] }
+              ] 
+            },
+            { id: "w1d4", label: "W1D4", topic: "土壤的秘密", vid: "Q-J2FErZHuA", start: 45, 
+              tasks: [
+                { sentence: "Soil is full of nutrients.", vocab: ["Soil", "Nutrient"] },
+                { sentence: "Worms help keep the soil healthy.", vocab: ["Worm", "Healthy"] },
+                { sentence: "Plants need good soil to grow.", vocab: ["Garden", "Grow"] }
+              ] 
+            },
+            { id: "w1d5", label: "W1D5", topic: "食蟲植物", vid: "6L_p3ZkSlLo", start: 75, 
+              tasks: [
+                { sentence: "Some plants eat insects.", vocab: ["Carnivorous", "Trap"] },
+                { sentence: "The trap is very sticky.", vocab: ["Insect", "Sticky"] },
+                { sentence: "The plant digests the fly.", vocab: ["Digest", "Fly"] }
+              ] 
+            },
+            { id: "w2d1", label: "W2D1", topic: "藍鯨奇觀", vid: "dciLg3Zm1hI", start: 0, 
+              tasks: [
+                { sentence: "The blue whale is the biggest mammal.", vocab: ["Mammal", "Ocean"] },
+                { sentence: "Its heart is as big as a car.", vocab: ["Giant", "Heart"] },
+                { sentence: "It breathes through a blowhole.", vocab: ["Blowhole", "Breathe"] }
+              ] 
+            },
+            { id: "w2d2", label: "W2D2", topic: "企鵝家族", vid: "T8Wp2yWH_3E", start: 40, 
+              tasks: [
+                { sentence: "Penguins live in the cold Antarctica.", vocab: ["Antarctica", "Feather"] },
+                { sentence: "They use feathers to stay warm.", vocab: ["Slide", "Warm"] },
+                { sentence: "They dive deep into the ocean.", vocab: ["Dive", "Group"] }
+              ] 
+            },
+            { id: "w2d3", label: "W2D3", topic: "海洋分層", vid: "fHVE4B-UjmM", start: 60, 
+              tasks: [
+                { sentence: "The top zone has the most sunlight.", vocab: ["Sunlight", "Twilight"] },
+                { sentence: "Many strange fish live in the dark.", vocab: ["Deep", "Dark"] },
+                { sentence: "Water pressure is high in the deep sea.", vocab: ["Pressure", "Sea"] }
+              ] 
+            },
+            { id: "w2d4", label: "W2D4", topic: "聰明海豚", vid: "hREPV58WNp0", start: 30, 
+              tasks: [
+                { sentence: "Dolphins are very intelligent animals.", vocab: ["Intelligent", "Pod"] },
+                { sentence: "They live together in a pod.", vocab: ["Sound", "Jump"] },
+                { sentence: "They use sounds to talk to each other.", vocab: ["Friendly", "Talk"] }
+              ] 
+            },
+            { id: "w2d5", label: "W2D5", topic: "奇怪深海魚", vid: "A7LU5Wxc_0Y", start: 60, 
+              tasks: [
+                { sentence: "The blobfish looks very strange.", vocab: ["Blobfish", "Strange"] },
+                { sentence: "It lives deep under the ocean.", vocab: ["Appearance", "Deep"] },
+                { sentence: "It floats above the sea floor.", vocab: ["Float", "Floor"] }
+              ] 
+            },
+            { id: "w3d1", label: "W3D1", topic: "蝴蝶蛻變", vid: "V5RSpMQQOpw", start: 60, 
+              tasks: [
+                { sentence: "The caterpillar makes a chrysalis.", vocab: ["Caterpillar", "Chrysalis"] },
+                { sentence: "It changes into a butterfly.", vocab: ["Butterfly", "Change"] },
+                { sentence: "Its wings are very beautiful.", vocab: ["Wings", "Beautiful"] }
+              ] 
+            },
+            { id: "w3d2", label: "W3D2", topic: "忙碌蜜蜂", vid: "ta154f5Rp5Y", start: 30, 
+              tasks: [
+                { sentence: "Bees collect pollen from flowers.", vocab: ["Pollen", "Nectar"] },
+                { sentence: "They bring nectar back to the hive.", vocab: ["Hive", "Honey"] },
+                { sentence: "The queen bee is very important.", vocab: ["Queen", "Important"] }
+              ] 
+            },
+            { id: "w3d3", label: "W3D3", topic: "蜘蛛朋友", vid: "3qdxEiIB_Sw", start: 90, 
+              tasks: [
+                { sentence: "Spiders use silk to make webs.", vocab: ["Spider", "Web"] },
+                { sentence: "They have eight legs.", vocab: ["Silk", "Eight"] },
+                { sentence: "Most spiders are not dangerous to us.", vocab: ["Predator", "Safe"] }
+              ] 
+            },
+            { id: "w3d4", label: "W3D4", topic: "螞蟻帝國", vid: "dTmlE9Cduj4", start: 0, 
+              tasks: [
+                { sentence: "Ants live together in a colony.", vocab: ["Colony", "Tunnel"] },
+                { sentence: "They dig tunnels under the ground.", vocab: ["Worker", "Ground"] },
+                { sentence: "Ants can carry very heavy things.", vocab: ["Strong", "Carry"] }
+              ] 
+            },
+            { id: "w3d5", label: "W3D5", topic: "螢火蟲之光", vid: "Y7RI1qjB2r8", start: 60, 
+              tasks: [
+                { sentence: "Fireflies flash their lights at night.", vocab: ["Flash", "Light"] },
+                { sentence: "They use light to talk to friends.", vocab: ["Signal", "Night"] },
+                { sentence: "The light comes from their tails.", vocab: ["Tail", "Friend"] }
+              ] 
+            },
+            { id: "w4d1", label: "W4D1", topic: "森林大貓", vid: "8cQmky_wQao", start: 45, 
+              tasks: [
+                { sentence: "Lions are called the king of beasts.", vocab: ["Lion", "King"] },
+                { sentence: "Tigers have stripes on their fur.", vocab: ["Tiger", "Fur"] },
+                { sentence: "Big cats are powerful predators.", vocab: ["Predator", "Roar"] }
+              ] 
+            },
+            { id: "w4d2", label: "W4D2", topic: "猩猩生活", vid: "rHhSCO5-3Pg", start: 0, 
+              tasks: [
+                { sentence: "Gorillas live in the deep forest.", vocab: ["Gorilla", "Forest"] },
+                { sentence: "They live in a group called a troop.", vocab: ["Social", "Troop"] },
+                { sentence: "They are very gentle giants.", vocab: ["Gentle", "Giant"] }
+              ] 
+            },
+            { id: "w4d3", label: "W4D3", topic: "無尾熊散熱", vid: "JnZTNWbQsKQ", start: 30, 
+              tasks: [
+                { sentence: "Koalas live in Australia.", vocab: ["Koala", "Australia"] },
+                { sentence: "They hug trees to stay cool.", vocab: ["Cool", "Hug"] },
+                { sentence: "They love to eat eucalyptus leaves.", vocab: ["Eucalyptus", "Leaf"] }
+              ] 
+            },
+            { id: "w4d4", label: "W4D4", topic: "樹懶奧秘", vid: "eq42qcpTo1o", start: 75, 
+              tasks: [
+                { sentence: "Sloths are the slowest mammals.", vocab: ["Sloth", "Slow"] },
+                { sentence: "They spend most time on branches.", vocab: ["Jungle", "Branch"] },
+                { sentence: "They sleep for a long time.", vocab: ["Sleep", "Time"] }
+              ] 
+            },
+            { id: "w4d5", label: "W4D5", topic: "聰明烏鴉", vid: "XofnexWvBN0", start: 45, 
+              tasks: [
+                { sentence: "Crows are very clever birds.", vocab: ["Crow", "Clever"] },
+                { sentence: "They can use tools to get food.", vocab: ["Tool", "Food"] },
+                { sentence: "They are good at solving problems.", vocab: ["Problem", "Brain"] }
+              ] 
+            }
+        ]
+    }
+    // 註：您可以繼續按此格式補齊第 5 週至第 12 週的數據。
+];
+
+    function renderSidebar() {
+        const menu = document.getElementById('menu');
+        const history = JSON.parse(localStorage.getItem('study_done') || '[]');
+        menu.innerHTML = '';
+        planData.forEach(w => {
+            const wt = document.createElement('div');
+            wt.className = 'week-title'; wt.innerText = w.week; menu.appendChild(wt);
+            w.days.forEach(d => {
+                const di = document.createElement('div');
+                di.className = `day-item ${history.includes(d.id) ? 'active' : ''}`;
+                di.innerHTML = `<span>${d.label} ${d.topic}</span><div class="status-dot ${history.includes(d.id)?'done':''}"></div>`;
+                di.onclick = () => loadDay(d); menu.appendChild(di);
+            });
+        });
+        const percent = Math.round((history.length / 84) * 100);
+        document.getElementById('progress-text').innerText = `已完成 ${history.length} 天 / 84 天 (${percent}%)`;
+        document.getElementById('progress-fill').style.width = percent + '%';
+    }
+
+    function loadDay(day) {
+        document.getElementById('content').style.display = 'block';
+        document.getElementById('day-label').innerText = day.label;
+        document.getElementById('day-topic').innerText = day.topic;
+        const container = document.getElementById('tasks-container');
+        container.innerHTML = '';
+        
+        day.tasks.forEach(task => {
+            const card = document.createElement('div');
+            card.className = 'task-card';
+            card.innerHTML = `
+                <div class="vocab-list">${task.vocab.map(v => `
+                    <div class="vocab-item">
+                        <span>${v}</span>
+                        <button class="btn-play" onclick="speak('${v}')">🔊</button>
+                        <button class="btn-rec" onclick="startChallenge(this, '${v}')">🎤</button>
+                    </div>`).join('')}
+                </div>
+                <div class="sentence-text">"${task.sentence}"</div>
+                <div class="btn-group">
+                    <button class="btn-play" onclick="speak('${task.sentence}')">🔊 聆聽句子</button>
+                    <button class="btn-rec" onclick="startChallenge(this, '${task.sentence}')">🎤 錄音評分</button>
+                </div>
+            `;
+            container.appendChild(card);
+        });
+
+        if (player) player.loadVideoById({ videoId: day.vid, startSeconds: day.start });
+        let done = JSON.parse(localStorage.getItem('study_done') || '[]');
+        if(!done.includes(day.id)) { done.push(day.id); localStorage.setItem('study_done', JSON.stringify(done)); renderSidebar(); }
+    }
+
+    function speak(text) {
+        const msg = new SpeechSynthesisUtterance(text);
+        msg.lang = 'en-US'; speechSynthesis.speak(msg);
+    }
+
+    // 核心功能：錄音 + 辨識評分
+    let mediaRecorder, chunks = [], currentRecognition;
+
+    function startChallenge(btn, targetText) {
+        if (isRecording) return;
+        isRecording = true;
+        btn.classList.add('recording');
+        btn.innerText = "🛑 正在評分...";
+
+        let finalScore = "⭐"; // 預設 1 星
+        let recognizedText = "";
+
+        // 啟動辨識
+        if (Recognition) {
+            currentRecognition = new Recognition();
+            currentRecognition.lang = 'en-US';
+            currentRecognition.onresult = e => {
+                recognizedText = e.results[0][0].transcript.toLowerCase();
+                const target = targetText.toLowerCase().replace(/[.,!?]/g, '');
+                // 評分邏輯
+                if (recognizedText === target) finalScore = "⭐⭐⭐⭐⭐ (Perfect!)";
+                else if (target.includes(recognizedText) || recognizedText.includes(target)) finalScore = "⭐⭐⭐ (Good)";
+                else finalScore = "⭐ (Try Again)";
+            };
+            currentRecognition.start();
+        }
+
+        // 啟動錄音
+        navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
+            mediaRecorder = new MediaRecorder(stream);
+            chunks = [];
+            mediaRecorder.ondataavailable = e => chunks.push(e.data);
+            mediaRecorder.onstop = () => {
+                const blob = new Blob(chunks, { type: 'audio/webm' });
+                saveRecord(blob, targetText, finalScore, recognizedText);
+                isRecording = false;
+                btn.classList.remove('recording');
+                btn.innerHTML = btn.classList.contains('btn-play') ? "🔊 聆聽" : "🎤 錄音評分";
+            };
+            mediaRecorder.start();
+            setTimeout(() => { 
+                mediaRecorder.stop(); 
+                if(currentRecognition) currentRecognition.stop(); 
+            }, 4000);
+        });
+    }
+
+    function saveRecord(blob, label, score, transcript) {
+        const reader = new FileReader();
+        reader.readAsDataURL(blob);
+        reader.onloadend = () => {
+            const transaction = db.transaction(["recordings"], "readwrite");
+            transaction.objectStore("recordings").add({
+                label: label, score: score, transcript: transcript,
+                data: reader.result, time: new Date().toLocaleString()
+            });
+            transaction.oncomplete = () => loadHistory();
+        };
+    }
+
+    function loadHistory() {
+        if(!db) return;
+        const list = document.getElementById('history-list');
+        list.innerHTML = '';
+        const store = db.transaction("recordings").objectStore("recordings");
+        store.openCursor(null, "prev").onsuccess = e => {
+            const cursor = e.target.result;
+            if (cursor) {
+                const div = document.createElement('div');
+                div.className = 'audio-item';
+                div.innerHTML = `
+                    <div class="audio-info">
+                        <div>
+                            <strong>${cursor.value.label}</strong><br>
+                            <span class="score-tag">${cursor.value.score}</span>
+                            <span style="font-size:0.8em; color:var(--dim)"> | 你說的是: "${cursor.value.transcript || '...'}"</span>
+                        </div>
+                        <button class="btn-delete" onclick="deleteRecord(${cursor.value.id})">🗑️</button>
+                    </div>
+                    <audio controls src="${cursor.value.data}"></audio>
+                `;
+                list.appendChild(div);
+                cursor.continue();
+            }
+        };
+    }
+
+    function deleteRecord(id) {
+        if(confirm("確定要刪除這筆練習紀錄嗎？")) {
+            const transaction = db.transaction(["recordings"], "readwrite");
+            transaction.objectStore("recordings").delete(id);
+            transaction.oncomplete = () => loadHistory();
+        }
+    }
+
+    function onYouTubeIframeAPIReady() {
+        player = new YT.Player('player', { height: '100%', width: '100%', videoId: 'Gy60BqCnTG4' });
+        renderSidebar();
+    }
+
+    const tag = document.createElement('script');
+    tag.src = "https://www.youtube.com/iframe_api";
+    document.head.appendChild(tag);
+</script>
+</body>
+</html>
 <html lang="zh-Hant">
 <head>
     <meta charset="UTF-8">
@@ -280,3 +691,4 @@
 
 </body>
 </html>
+
