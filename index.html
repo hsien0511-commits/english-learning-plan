@@ -3,293 +3,218 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>12週英語挑戰：進階美化版</title>
+    <title>小英雄英語 12 週挑戰</title>
     <style>
-        :root {
-            --bg: #0f1114; --sidebar: #16181d; --card: rgba(30, 34, 42, 0.7);
-            --accent: #64b5f6; --accent-glow: rgba(100, 181, 246, 0.3);
-            --text: #e0e0e0; --dim: #94a3b8; --success: #81c784;
-            --danger: #ff5252; --border: rgba(255, 255, 255, 0.08);
-        }
-        body { font-family: 'Inter', 'PingFang TC', sans-serif; background: var(--bg); color: var(--text); display: flex; margin: 0; height: 100vh; overflow: hidden; }
-        .sidebar { width: 320px; background: var(--sidebar); border-right: 1px solid var(--border); display: flex; flex-direction: column; z-index: 10; }
-        .sidebar-header { padding: 25px; border-bottom: 1px solid var(--border); }
-        .progress-box { background: #1e222a; padding: 18px; border-radius: 12px; margin-top: 15px; border: 1px solid var(--border); }
-        .progress-bar-bg { background: #334155; height: 8px; border-radius: 4px; overflow: hidden; position: relative; }
-        .progress-bar-fill { background: linear-gradient(90deg, #42a5f5, #90caf9); height: 100%; transition: width 0.8s ease; width: 0%; }
-        .menu-list { flex-grow: 1; overflow-y: auto; scrollbar-width: thin; }
-        .week-title { padding: 15px 20px; background: rgba(255,255,255,0.03); font-size: 0.85em; font-weight: bold; color: var(--dim); border-bottom: 1px solid var(--border); }
-        .day-item { padding: 14px 25px; font-size: 0.9em; cursor: pointer; transition: 0.3s; display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.02); }
-        .day-item:hover { background: rgba(255,255,255,0.05); }
-        .day-item.active { background: rgba(100, 181, 246, 0.1); color: var(--accent); border-left: 4px solid var(--accent); }
-        .status-dot { width: 8px; height: 8px; border-radius: 50%; background: #444; align-self: center; }
-        .status-dot.done { background: var(--success); box-shadow: 0 0 5px var(--success); }
-        .main { flex-grow: 1; overflow-y: auto; padding: 40px; background: var(--bg); }
-        .container { max-width: 850px; margin: 0 auto; }
-        .video-box { width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 12px; overflow: hidden; margin-bottom: 30px; border: 1px solid var(--border); }
-        .task-card { background: var(--card); backdrop-filter: blur(12px); border-radius: 16px; padding: 25px; margin-bottom: 25px; border: 1px solid var(--border); }
-        .sentence-text { font-size: 1.3em; color: var(--accent); margin: 15px 0; font-weight: 500; }
-        button { border: none; padding: 10px 20px; border-radius: 10px; cursor: pointer; font-weight: 600; transition: 0.2s; }
-        .btn-play { background: #334155; color: white; margin-right: 10px; }
-        .btn-rec { background: var(--accent); color: #0f1114; }
-        .btn-rec.recording { background: var(--danger); color: white; animation: pulse 1.5s infinite; }
-        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(255,82,82,0.7); } 70% { box-shadow: 0 0 0 10px rgba(255,82,82,0); } 100% { box-shadow: 0 0 0 0 rgba(255,82,82,0); } }
-        .audio-item { background: rgba(255, 255, 255, 0.03); padding: 15px; border-radius: 12px; margin-bottom: 10px; border: 1px solid var(--border); display: flex; flex-direction: column; }
-        audio { height: 35px; width: 100%; filter: invert(90%); }
+        :root { --sidebar-bg: #2c3e50; --main-bg: #f8f9fa; --accent: #3498db; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; display: flex; margin: 0; height: 100vh; background: var(--main-bg); }
+        
+        /* 側邊欄 */
+        .sidebar { width: 300px; background: var(--sidebar-bg); color: white; display: flex; flex-direction: column; box-shadow: 2px 0 5px rgba(0,0,0,0.1); }
+        .sidebar-header { padding: 20px; background: #1a252f; text-align: center; border-bottom: 1px solid #34495e; }
+        .menu-list { flex-grow: 1; overflow-y: auto; }
+        .week-section { padding: 12px 20px; background: #34495e; font-weight: bold; font-size: 0.9em; color: #ecf0f1; cursor: pointer; display: flex; justify-content: space-between; }
+        .day-list { display: none; background: #2c3e50; }
+        .day-list.active { display: block; }
+        .menu-item { padding: 10px 30px; cursor: pointer; transition: 0.2s; font-size: 0.9em; color: #bdc3c7; border-left: 4px solid transparent; }
+        .menu-item:hover { background: #3d566e; color: white; }
+        .menu-item.active { background: #3498db; color: white; border-left: 4px solid #fff; }
+
+        /* 主內容 */
+        .main-content { flex-grow: 1; padding: 30px; overflow-y: auto; display: flex; flex-direction: column; align-items: center; }
+        .content-card { width: 100%; max-width: 850px; background: white; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); padding: 35px; margin-bottom: 20px; }
+        .video-container { position: relative; padding-bottom: 56.25%; height: 0; margin: 25px 0; border-radius: 8px; overflow: hidden; background: #000; border: 3px solid #eee; }
+        .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+        
+        .section-title { border-left: 5px solid var(--accent); padding-left: 15px; margin: 30px 0 15px; color: #2c3e50; font-size: 1.2em; }
+        .vocab-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; }
+        .vocab-tag { background: #e1f5fe; padding: 12px; border-radius: 8px; text-align: center; font-weight: bold; color: #0277bd; border: 1px solid #b3e5fc; }
+        .task-box { background: #fff9db; border: 1px solid #fab005; padding: 25px; border-radius: 8px; color: #856404; line-height: 1.6; }
+        .task-sentence { margin-bottom: 8px; font-weight: 600; font-size: 1.1em; }
+        #welcome-screen { text-align: center; margin-top: 150px; color: #7f8c8d; }
     </style>
 </head>
 <body>
+
 <div class="sidebar">
     <div class="sidebar-header">
-        <h3 style="margin:0">English Studio</h3>
-        <div class="progress-box">
-            <div id="progress-text" class="progress-text">載入中...</div>
-            <div class="progress-bar-bg"><div id="progress-fill" class="progress-bar-fill"></div></div>
-        </div>
+        <h2 style="margin:0;">英文自學計畫</h2>
+        <p style="font-size: 0.8em; opacity: 0.7; margin-top:5px;">給 10 歲小英雄的 84 天冒險</p>
     </div>
-    <div id="menu" class="menu-list"></div>
+    <div id="menu-list" class="menu-list"></div>
 </div>
-<div class="main">
-    <div id="content" style="display:none" class="container">
-        <h2 id="day-label" style="margin:0; color:var(--accent)"></h2>
-        <h1 id="day-topic" style="margin: 10px 0 20px 0"></h1>
-        <div class="video-box"><div id="player"></div></div>
-        <div id="tasks-container"></div>
-        <div class="history-box">
-            <h3>📜 歷史紀錄與評分</h3>
-            <div id="history-list"></div>
+
+<div class="main-content">
+    <div id="welcome-screen">
+        <h1>🚀 準備好開始今天的挑戰了嗎？</h1>
+        <p>請點擊左側列表展開週次，選擇今天的學習進度。</p>
+    </div>
+
+    <div id="display-area" style="display: none; width: 100%;">
+        <div class="content-card">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h1 id="day-title" style="margin:0; color: var(--accent);"></h1>
+                <span id="time-tag" style="background:#eee; padding:5px 10px; border-radius:5px; font-size:0.8em; color:#666;"></span>
+            </div>
+            <h2 id="topic-title" style="color: #34495e; margin-top: 10px;"></h2>
+            
+            <div class="video-container">
+                <iframe id="video-player" src="" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+            </div>
+
+            <h3 class="section-title">核心單字 Vocabulary</h3>
+            <div id="vocab-container" class="vocab-grid"></div>
+
+            <h3 class="section-title">今日挑戰句 Challenge</h3>
+            <div class="task-box" id="task-content"></div>
         </div>
     </div>
 </div>
 
 <script>
-    let player, db, isRecording = false;
-    const Recognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-
-    // 12 週完整數據
+    // 完整 12 週數據整合
     const planData = [
         {
-            week: "第一個月：自然界觀察者",
+            week: "W1-W4: 自然界觀察者",
             days: [
-                { id: "w1d1", label: "W1D1", topic: "生命是什麼？", vid: "Gy60BqCnTG4", start: 0, tasks: [{ sentence: "Living things need to breathe.", vocab: ["Living", "Breathe"] }, { sentence: "A rock cannot grow.", vocab: ["Rock", "Grow"] }, { sentence: "All living things change over time.", vocab: ["Change", "Energy"] }] },
-                { id: "w1d2", label: "W1D2", topic: "植物的成長", vid: "tkFPyue5X3Q", start: 30, tasks: [{ sentence: "Seeds grow roots first.", vocab: ["Seed", "Root"] }, { sentence: "The stem helps the plant stand up.", vocab: ["Stem", "Stand"] }, { sentence: "Leaves need sunlight to make food.", vocab: ["Leaf", "Sunlight"] }] },
-                { id: "w1d3", label: "W1D3", topic: "落葉的顏色", vid: "Xk4-6II8l5Q", start: 60, tasks: [{ sentence: "Chlorophyll makes leaves green.", vocab: ["Autumn", "Chlorophyll"] }, { sentence: "Trees rest during the winter.", vocab: ["Green", "Rest"] }, { sentence: "Leaves turn red and orange in autumn.", vocab: ["Sugar", "Autumn"] }] },
-                { id: "w1d4", label: "W1D4", topic: "土壤的秘密", vid: "Q-J2FErZHuA", start: 45, tasks: [{ sentence: "Soil is full of nutrients.", vocab: ["Soil", "Nutrient"] }, { sentence: "Worms help keep the soil healthy.", vocab: ["Worm", "Healthy"] }, { sentence: "Plants need good soil to grow.", vocab: ["Garden", "Grow"] }] },
-                { id: "w1d5", label: "W1D5", topic: "食蟲植物", vid: "6L_p3ZkSlLo", start: 75, tasks: [{ sentence: "Some plants eat insects.", vocab: ["Carnivorous", "Trap"] }, { sentence: "The trap is very sticky.", vocab: ["Insect", "Sticky"] }, { sentence: "The plant digests the fly.", vocab: ["Digest", "Fly"] }] },
-                { id: "w2d1", label: "W2D1", topic: "藍鯨奇觀", vid: "dciLg3Zm1hI", start: 0, tasks: [{ sentence: "The blue whale is the biggest mammal.", vocab: ["Mammal", "Ocean"] }, { sentence: "Its heart is as big as a car.", vocab: ["Giant", "Heart"] }, { sentence: "It breathes through a blowhole.", vocab: ["Blowhole", "Breathe"] }] },
-                { id: "w2d2", label: "W2D2", topic: "企鵝家族", vid: "T8Wp2yWH_3E", start: 40, tasks: [{ sentence: "Penguins live in the cold Antarctica.", vocab: ["Antarctica", "Feather"] }, { sentence: "They use feathers to stay warm.", vocab: ["Slide", "Warm"] }, { sentence: "They dive deep into the ocean.", vocab: ["Dive", "Group"] }] },
-                { id: "w2d3", label: "W2D3", topic: "海洋分層", vid: "fHVE4B-UjmM", start: 60, tasks: [{ sentence: "The top zone has the most sunlight.", vocab: ["Sunlight", "Twilight"] }, { sentence: "Many strange fish live in the dark.", vocab: ["Deep", "Dark"] }, { sentence: "Water pressure is high in the deep sea.", vocab: ["Pressure", "Sea"] }] },
-                { id: "w2d4", label: "W2D4", topic: "聰明海豚", vid: "hREPV58WNp0", start: 30, tasks: [{ sentence: "Dolphins are very intelligent animals.", vocab: ["Intelligent", "Pod"] }, { sentence: "They live together in a pod.", vocab: ["Sound", "Jump"] }, { sentence: "They use sounds to talk to each other.", vocab: ["Friendly", "Talk"] }] },
-                { id: "w2d5", label: "W2D5", topic: "奇怪深海魚", vid: "A7LU5Wxc_0Y", start: 60, tasks: [{ sentence: "The blobfish looks very strange.", vocab: ["Blobfish", "Strange"] }, { sentence: "It lives deep under the ocean.", vocab: ["Appearance", "Deep"] }, { sentence: "It floats above the sea floor.", vocab: ["Float", "Floor"] }] },
-                { id: "w3d1", label: "W3D1", topic: "蝴蝶蛻變", vid: "V5RSpMQQOpw", start: 60, tasks: [{ sentence: "The caterpillar makes a chrysalis.", vocab: ["Caterpillar", "Chrysalis"] }, { sentence: "It changes into a butterfly.", vocab: ["Butterfly", "Change"] }, { sentence: "Its wings are very beautiful.", vocab: ["Wings", "Beautiful"] }] },
-                { id: "w3d2", label: "W3D2", topic: "忙碌蜜蜂", vid: "ta154f5Rp5Y", start: 30, tasks: [{ sentence: "Bees collect pollen from flowers.", vocab: ["Pollen", "Nectar"] }, { sentence: "They bring nectar back to the hive.", vocab: ["Hive", "Honey"] }, { sentence: "The queen bee is very important.", vocab: ["Queen", "Important"] }] },
-                { id: "w3d3", label: "W3D3", topic: "蜘蛛朋友", vid: "3qdxEiIB_Sw", start: 90, tasks: [{ sentence: "Spiders use silk to make webs.", vocab: ["Spider", "Web"] }, { sentence: "They have eight legs.", vocab: ["Silk", "Eight"] }, { sentence: "Most spiders are not dangerous.", vocab: ["Predator", "Safe"] }] },
-                { id: "w3d4", label: "W3D4", topic: "螞蟻帝國", vid: "dTmlE9Cduj4", start: 0, tasks: [{ sentence: "Ants live together in a colony.", vocab: ["Colony", "Tunnel"] }, { sentence: "They dig tunnels under the ground.", vocab: ["Worker", "Ground"] }, { sentence: "Ants can carry very heavy things.", vocab: ["Strong", "Carry"] }] },
-                { id: "w3d5", label: "W3D5", topic: "螢火蟲之光", vid: "Y7RI1qjB2r8", start: 60, tasks: [{ sentence: "Fireflies flash their lights at night.", vocab: ["Flash", "Light"] }, { sentence: "They use light to talk to friends.", vocab: ["Signal", "Night"] }, { sentence: "The light comes from their tails.", vocab: ["Tail", "Friend"] }] },
-                { id: "w4d1", label: "W4D1", topic: "森林大貓", vid: "8cQmky_wQao", start: 45, tasks: [{ sentence: "Lions are called the king of beasts.", vocab: ["Lion", "King"] }, { sentence: "Tigers have stripes on their fur.", vocab: ["Tiger", "Fur"] }, { sentence: "Big cats are powerful predators.", vocab: ["Predator", "Roar"] }] },
-                { id: "w4d2", label: "W4D2", topic: "猩猩生活", vid: "rHhSCO5-3Pg", start: 0, tasks: [{ sentence: "Gorillas live in the deep forest.", vocab: ["Gorilla", "Forest"] }, { sentence: "They live in a group called a troop.", vocab: ["Social", "Troop"] }, { sentence: "They are very gentle giants.", vocab: ["Gentle", "Giant"] }] },
-                { id: "w4d3", label: "W4D3", topic: "無尾熊散熱", vid: "JnZTNWbQsKQ", start: 30, tasks: [{ sentence: "Koalas live in Australia.", vocab: ["Koala", "Australia"] }, { sentence: "They hug trees to stay cool.", vocab: ["Cool", "Hug"] }, { sentence: "They love to eat eucalyptus leaves.", vocab: ["Eucalyptus", "Leaf"] }] },
-                { id: "w4d4", label: "W4D4", topic: "樹懶奧秘", vid: "eq42qcpTo1o", start: 75, tasks: [{ sentence: "Sloths are the slowest mammals.", vocab: ["Sloth", "Slow"] }, { sentence: "They spend most time on branches.", vocab: ["Jungle", "Branch"] }, { sentence: "They sleep for a long time.", vocab: ["Sleep", "Time"] }] },
-                { id: "w4d5", label: "W4D5", topic: "聰明烏鴉", vid: "XofnexWvBN0", start: 45, tasks: [{ sentence: "Crows are very clever birds.", vocab: ["Crow", "Clever"] }, { sentence: "They can use tools to get food.", vocab: ["Tool", "Food"] }, { sentence: "They are good at solving problems.", vocab: ["Problem", "Brain"] }] }
+                { id: "1-1", day: "W1D1", title: "生命是什麼？", video: "https://www.youtube.com/embed/Gy60BqCnTG4?start=0", time: "00:00-01:30", vocab: ["Living", "Breathe", "Grow", "Change", "Energy"], tasks: ["1. Living things need to breathe.", "2. A rock cannot grow.", "3. All living things change over time."] },
+                { id: "1-2", day: "W1D2", title: "植物的成長", video: "https://www.youtube.com/embed/tkFPyue5X3Q?start=30", time: "00:30-02:00", vocab: ["Seed", "Root", "Stem", "Leaf", "Sunlight"], tasks: ["1. Seeds grow roots first.", "2. The stem helps the plant stand up.", "3. Leaves need sunlight to make food."] },
+                { id: "1-3", day: "W1D3", title: "落葉的顏色", video: "https://www.youtube.com/embed/Xk4-6II8l5Q?start=60", time: "01:00-02:30", vocab: ["Autumn", "Chlorophyll", "Green", "Sugar", "Rest"], tasks: ["1. Chlorophyll makes leaves green.", "2. Trees rest during the winter.", "3. Leaves turn red and orange in autumn."] },
+                { id: "1-4", day: "W1D4", title: "土壤的秘密", video: "https://www.youtube.com/embed/Q-J2FErZHuA?start=45", time: "00:45-02:15", vocab: ["Soil", "Nutrient", "Worm", "Healthy", "Garden"], tasks: ["1. Soil is full of nutrients.", "2. Worms help keep the soil healthy.", "3. Plants need good soil to grow."] },
+                { id: "1-5", day: "W1D5", title: "食蟲植物", video: "https://www.youtube.com/embed/6L_p3ZkSlLo?start=75", time: "01:15-02:45", vocab: ["Carnivorous", "Trap", "Insect", "Sticky", "Digest"], tasks: ["1. Some plants eat insects.", "2. The trap is very sticky.", "3. The plant digests the fly."] },
+                { id: "2-1", day: "W2D1", title: "藍鯨奇觀", video: "https://www.youtube.com/embed/dciLg3Zm1hI", time: "00:00-01:00", vocab: ["Mammal", "Ocean", "Giant", "Heart", "Blowhole"], tasks: ["1. The blue whale is the biggest mammal.", "2. Its heart is as big as a car.", "3. It breathes through a blowhole."] },
+                { id: "2-2", day: "W2D2", title: "企鵝家族", video: "https://www.youtube.com/embed/T8Wp2yWH_3E?start=40", time: "00:40-02:10", vocab: ["Antarctica", "Feather", "Slide", "Dive", "Group"], tasks: ["1. Penguins live in the cold Antarctica.", "2. They use feathers to stay warm.", "3. They dive deep into the ocean."] },
+                { id: "2-3", day: "W2D3", title: "海洋分層", video: "https://www.youtube.com/embed/fHVE4B-UjmM?start=60", time: "01:00-02:30", vocab: ["Sunlight", "Twilight", "Deep", "Pressure", "Dark"], tasks: ["1. The top zone has the most sunlight.", "2. Many strange fish live in the dark.", "3. Water pressure is high in the deep sea."] },
+                { id: "2-4", day: "W2D4", title: "聰明海豚", video: "https://www.youtube.com/embed/hREPV58WNp0?start=30", time: "00:30-02:00", vocab: ["Intelligent", "Pod", "Sound", "Jump", "Friendly"], tasks: ["1. Dolphins are very intelligent animals.", "2. They live together in a pod.", "3. They use sounds to talk to each other."] },
+                { id: "2-5", day: "W2D5", title: "奇怪深海魚", video: "https://www.youtube.com/embed/A7LU5Wxc_0Y?start=60", time: "01:00-02:30", vocab: ["Blobfish", "Deep", "Strange", "Appearance", "Float"], tasks: ["1. The blobfish looks very strange.", "2. It lives deep under the ocean.", "3. It floats above the sea floor."] },
+                { id: "3-1", day: "W3D1", title: "蝴蝶蛻變", video: "https://www.youtube.com/embed/V5RSpMQQOpw?start=60", time: "01:00-02:30", vocab: ["Caterpillar", "Chrysalis", "Butterfly", "Change", "Wings"], tasks: ["1. The caterpillar makes a chrysalis.", "2. It changes into a butterfly.", "3. Its wings are very beautiful."] },
+                { id: "3-2", day: "W3D2", title: "忙碌蜜蜂", video: "https://www.youtube.com/embed/ta154f5Rp5Y?start=30", time: "00:30-02:00", vocab: ["Pollen", "Nectar", "Hive", "Honey", "Queen"], tasks: ["1. Bees collect pollen from flowers.", "2. They bring nectar back to the hive.", "3. The queen bee is very important."] },
+                { id: "3-3", day: "W3D3", title: "蜘蛛朋友", video: "https://www.youtube.com/embed/3qdxEiIB_Sw?start=90", time: "01:30-03:00", vocab: ["Spider", "Web", "Silk", "Eight", "Predator"], tasks: ["1. Spiders use silk to make webs.", "2. They have eight legs.", "3. Most spiders are not dangerous to us."] },
+                { id: "3-4", day: "W3D4", title: "螞蟻帝國", video: "https://www.youtube.com/embed/dTmlE9Cduj4", time: "00:00-01:30", vocab: ["Colony", "Tunnel", "Worker", "Strong", "Carry"], tasks: ["1. Ants live together in a colony.", "2. They dig tunnels under the ground.", "3. Ants can carry very heavy things."] },
+                { id: "3-5", day: "W3D5", title: "螢火蟲之光", video: "https://www.youtube.com/embed/Y7RI1qjB2r8?start=60", time: "01:00-02:30", vocab: ["Flash", "Light", "Signal", "Night", "Tail"], tasks: ["1. Fireflies flash their lights at night.", "2. They use light to talk to friends.", "3. The light comes from their tails."] },
+                { id: "4-1", day: "W4D1", title: "森林大貓", video: "https://www.youtube.com/embed/8cQmky_wQao?start=45", time: "00:45-02:15", vocab: ["Lion", "Tiger", "Predator", "Roar", "Fur"], tasks: ["1. Lions are called the king of beasts.", "2. Tigers have stripes on their fur.", "3. Big cats are powerful predators."] },
+                { id: "4-2", day: "W4D2", title: "猩猩生活", video: "https://www.youtube.com/embed/rHhSCO5-3Pg", time: "00:00-01:00", vocab: ["Gorilla", "Forest", "Social", "Troop", "Gentle"], tasks: ["1. Gorillas live in the deep forest.", "2. They live in a group called a troop.", "3. They are very gentle giants."] },
+                { id: "4-3", day: "W4D3", title: "無尾熊散熱", video: "https://www.youtube.com/embed/JnZTNWbQsKQ?start=30", time: "00:30-02:00", vocab: ["Koala", "Eucalyptus", "Cool", "Tree", "Australia"], tasks: ["1. Koalas live in Australia.", "2. They hug trees to stay cool.", "3. They love to eat eucalyptus leaves."] },
+                { id: "4-4", day: "W4D4", title: "樹懶奧秘", video: "https://www.youtube.com/embed/eq42qcpTo1o?start=75", time: "01:15-02:45", vocab: ["Sloth", "Slow", "Jungle", "Sleep", "Branch"], tasks: ["1. Sloths are the slowest mammals.", "2. They spend most time on branches.", "3. They sleep for a long time."] },
+                { id: "4-5", day: "W4D5", title: "聰明烏鴉", video: "https://www.youtube.com/embed/XofnexWvBN0?start=45", time: "00:45-02:15", vocab: ["Crow", "Clever", "Tool", "Problem", "Brain"], tasks: ["1. Crows are very clever birds.", "2. They can use tools to get food.", "3. They are good at solving problems."] }
             ]
         },
         {
-            week: "第二個月：人體與地球",
+            week: "W5-W8: 人體與地球",
             days: [
-                { id: "w5d1", label: "W5D1", topic: "骨骼系統", vid: "B3Fv2X8EKfE", start: 60, tasks: [{ sentence: "Bones protect our brain and heart.", vocab: ["Bone", "Skeleton"] }, { sentence: "Skeleton is like a strong frame.", vocab: ["Protect", "Frame"] }, { sentence: "Adults have 206 bones.", vocab: ["Skull", "Adult"] }] },
-                { id: "w5d2", label: "W5D2", topic: "肌肉與運動", vid: "j918PoWWaB0", start: 30, tasks: [{ sentence: "Muscles pull on bones to move.", vocab: ["Muscle", "Move"] }, { sentence: "We have many muscles.", vocab: ["Pull", "Body"] }, { sentence: "Exercise makes muscles strong.", vocab: ["Strong", "Exercise"] }] },
-                { id: "w5d3", label: "W5D3", topic: "神奇大腦", vid: "V5RSpMQQOpw", start: 60, tasks: [{ sentence: "Brain controls everything we do.", vocab: ["Brain", "Think"] }, { sentence: "It sends messages to our body.", vocab: ["Message", "Control"] }, { sentence: "Brain helps us remember things.", vocab: ["Memory", "Remember"] }] },
-                { id: "w5d4", label: "W5D4", topic: "心臟跳動", vid: "fN1Cyr0ZK9M", start: 45, tasks: [{ sentence: "Heart pumps blood everywhere.", vocab: ["Heart", "Pump"] }, { sentence: "You can feel your heart beat.", vocab: ["Blood", "Beat"] }, { sentence: "Blood carries oxygen to cells.", vocab: ["Oxygen", "Cell"] }] },
-                { id: "w5d5", label: "W5D5", topic: "五種感官", vid: "XtSq1wcFSEI", start: 120, tasks: [{ sentence: "We use eyes for sight.", vocab: ["Sight", "Hearing"] }, { sentence: "Ears help us with hearing.", vocab: ["Touch", "Smell"] }, { sentence: "Tongue is the organ for taste.", vocab: ["Taste", "Organ"] }] },
-                { id: "w6d1", label: "W6D1", topic: "消化過程", vid: "B3Fv2X8EKfE", start: 90, tasks: [{ sentence: "Food gives our body energy.", vocab: ["Stomach", "Energy"] }, { sentence: "We swallow food to the stomach.", vocab: ["Food", "Swallow"] }, { sentence: "Intestine absorbs nutrients.", vocab: ["Intestine", "Nutrient"] }] },
-                { id: "w6d2", label: "W6D2", topic: "眨眼秘密", vid: "V5RSpMQQOpw", start: 30, tasks: [{ sentence: "Blinking keeps our eyes wet.", vocab: ["Blink", "Eyelid"] }, { sentence: "We blink to keep out the dust.", vocab: ["Dust", "Wet"] }, { sentence: "It is a very quick movement.", vocab: ["Protect", "Quick"] }] },
-                { id: "w6d3", label: "W6D3", topic: "牙齒的作用", vid: "TG3fyVOWqJY", start: 60, tasks: [{ sentence: "We use teeth to chew food.", vocab: ["Enamel", "Chew"] }, { sentence: "Enamel is the hardest part.", vocab: ["Bite", "Hardest"] }, { sentence: "Brush teeth to stay healthy.", vocab: ["Dentist", "Healthy"] }] },
-                { id: "w6d4", label: "W6D4", topic: "為何感冒", vid: "V5RSpMQQOpw", start: 75, tasks: [{ sentence: "Germs can make us feel sick.", vocab: ["Germ", "Virus"] }, { sentence: "Wash your hands with soap.", vocab: ["Sneeze", "Wash"] }, { sentence: "Cover mouth when you sneeze.", vocab: ["Soap", "Mouth"] }] },
-                { id: "w6d5", label: "W6D5", topic: "睡眠重要", vid: "gqQ-XQ7P704", start: 45, tasks: [{ sentence: "Our body needs sleep to rest.", vocab: ["Sleep", "Rest"] }, { sentence: "Kids need more sleep.", vocab: ["Dream", "Energy"] }, { sentence: "Dreaming happens when asleep.", vocab: ["Night", "Asleep"] }] },
-                { id: "w7d1", label: "W7D1", topic: "火山爆發", vid: "TuY1NhrKIeM", start: 60, tasks: [{ sentence: "Magma is hot rock inside Earth.", vocab: ["Volcano", "Magma"] }, { sentence: "Outside it is called lava.", vocab: ["Lava", "Erupt"] }, { sentence: "Volcanoes erupt with ash.", vocab: ["Ash", "Fire"] }] },
-                { id: "w7d2", label: "W7D2", topic: "水循環", vid: "fN1Cyr0ZK9M", start: 30, tasks: [{ sentence: "Water evaporates into air.", vocab: ["Cycle", "Evaporate"] }, { sentence: "It forms clouds in the sky.", vocab: ["Cloud", "Rain"] }, { sentence: "Rain brings water to ground.", vocab: ["Water", "Ground"] }] },
-                { id: "w7d3", label: "W7D3", topic: "雷鳴閃電", vid: "tDoOiwNcawk", start: 60, tasks: [{ sentence: "Lightning is electricity flash.", vocab: ["Thunder", "Lightning"] }, { sentence: "Thunder is the sound it makes.", vocab: ["Storm", "Electricity"] }, { sentence: "Storms can be very loud.", vocab: ["Flash", "Loud"] }] },
-                { id: "w7d4", label: "W7D4", topic: "龍捲風", vid: "-s3UwOq1P1E", start: 75, tasks: [{ sentence: "A tornado is spinning wind.", vocab: ["Tornado", "Wind"] }, { sentence: "It is a powerful storm.", vocab: ["Spin", "Storm"] }, { sentence: "Stay in a safe place.", vocab: ["Safety", "Powerful"] }] },
-                { id: "w7d5", label: "W7D5", topic: "季節成因", vid: "UQjT5uKp2hg", start: 45, tasks: [{ sentence: "Earth tilts as it orbits Sun.", vocab: ["Season", "Orbit"] }, { sentence: "Tilt causes different seasons.", vocab: ["Tilt", "Summer"] }, { sentence: "Summer hot, winter cold.", vocab: ["Winter", "Cold"] }] },
-                { id: "w8d1", label: "W8D1", topic: "地球起源", vid: "fJ0J4mbj0_o", start: 60, tasks: [{ sentence: "Earth born from dust and gas.", vocab: ["Planet", "Space"] }, { sentence: "Gravity pulled things together.", vocab: ["Dust", "Gravity"] }, { sentence: "Took a long time to form.", vocab: ["Birth", "Form"] }] },
-                { id: "w8d2", label: "W8D2", topic: "認識岩石", vid: "TuY1NhrKIeM", start: 120, tasks: [{ sentence: "Three main types of rocks.", vocab: ["Rock", "Igneous"] }, { sentence: "Igneous comes from volcanoes.", vocab: ["Sedimentary", "Metamorphic"] }, { sentence: "Rocks change over millions years.", vocab: ["Hard", "Change"] }] },
-                { id: "w8d3", label: "W8D3", topic: "生物多樣性", vid: "Q-J2FErZHuA", start: 150, tasks: [{ sentence: "Animals live in habitats.", vocab: ["Habitat", "Diverse"] }, { sentence: "Biodiversity means many life.", vocab: ["Species", "Nature"] }, { sentence: "Protect our environment.", vocab: ["Environment", "Life"] }] },
-                { id: "w8d4", label: "W8D4", topic: "森林重要", vid: "Gy60BqCnTG4", start: 30, tasks: [{ sentence: "Forests give us clean air.", vocab: ["Forest", "Tree"] }, { sentence: "Many animals live in trees.", vocab: ["Oxygen", "Animal"] }, { sentence: "Trees are natural resource.", vocab: ["Natural", "Resource"] }] },
-                { id: "w8d5", label: "W8D5", topic: "山脈形成", vid: "Fd_XqYE2BWY", start: 60, tasks: [{ sentence: "Tectonic plates move slowly.", vocab: ["Mountain", "Plate"] }, { sentence: "Push against each other.", vocab: ["Tectonic", "Push"] }, { sentence: "Movement creates mountains.", vocab: ["High", "Move"] }] }
+                { id: "5-1", day: "W5D1", title: "骨骼系統", video: "https://www.youtube.com/embed/B3Fv2X8EKfE?start=60", time: "01:00-02:30", vocab: ["Bone", "Skeleton", "Protect", "Frame", "Skull"], tasks: ["1. Bones protect our brain and heart.", "2. Your skeleton is like a strong frame.", "3. Adults have 206 bones."] },
+                { id: "5-2", day: "W5D2", title: "肌肉與運動", video: "https://www.youtube.com/embed/j918PoWWaB0?start=30", time: "00:30-02:00", vocab: ["Muscle", "Move", "Pull", "Strong", "Exercise"], tasks: ["1. Muscles pull on bones to move.", "2. We have many muscles in our body.", "3. Exercise makes muscles strong."] },
+                { id: "5-3", day: "W5D3", title: "神奇大腦", video: "https://www.youtube.com/embed/V5RSpMQQOpw", time: "01:00-02:30", vocab: ["Brain", "Think", "Message", "Control", "Memory"], tasks: ["1. The brain controls everything.", "2. It sends messages to our body.", "3. Our brain helps us remember."] },
+                { id: "5-4", day: "W5D4", title: "心臟跳動", video: "https://www.youtube.com/embed/fN1Cyr0ZK9M", time: "00:45-02:15", vocab: ["Heart", "Pump", "Blood", "Beat", "Oxygen"], tasks: ["1. The heart pumps blood everywhere.", "2. You can feel your heart beat.", "3. Blood carries oxygen to cells."] },
+                { id: "5-5", day: "W5D5", title: "五種感官", video: "https://www.youtube.com/embed/XtSq1wcFSEI?start=120", time: "02:00-03:30", vocab: ["Sight", "Hearing", "Touch", "Smell", "Taste"], tasks: ["1. We use our eyes for sight.", "2. Our ears help us with hearing.", "3. The tongue is for taste."] },
+                { id: "6-1", day: "W6D1", title: "消化過程", video: "https://www.youtube.com/embed/B3Fv2X8EKfE?start=90", time: "01:30-03:00", vocab: ["Stomach", "Energy", "Food", "Swallow", "Intestine"], tasks: ["1. Food gives our body energy.", "2. We swallow food to the stomach.", "3. The intestine absorbs nutrients."] },
+                { id: "6-2", day: "W6D2", title: "為什麼要眨眼", video: "https://www.youtube.com/embed/V5RSpMQQOpw?start=30", time: "00:30-02:00", vocab: ["Blink", "Eyelid", "Dust", "Wet", "Protect"], tasks: ["1. Blinking keeps eyes wet.", "2. We blink to keep out dust.", "3. It is a very quick movement."] },
+                { id: "6-3", day: "W6D3", title: "牙齒的作用", video: "https://www.youtube.com/embed/TG3fyVOWqJY?start=60", time: "01:00-02:30", vocab: ["Enamel", "Chew", "Bite", "Dentist", "Healthy"], tasks: ["1. We use teeth to chew food.", "2. Enamel is the hardest part.", "3. Brush teeth to stay healthy."] },
+                { id: "6-4", day: "W6D4", title: "為什麼會感冒", video: "https://www.youtube.com/embed/V5RSpMQQOpw?start=75", time: "01:15-02:45", vocab: ["Germ", "Virus", "Sneeze", "Wash", "Soap"], tasks: ["1. Germs can make us feel sick.", "2. Wash your hands with soap.", "3. Cover mouth when you sneeze."] },
+                { id: "6-5", day: "W6D5", title: "睡眠的重要性", video: "https://www.youtube.com/embed/gqQ-XQ7P704?start=45", time: "00:45-02:15", vocab: ["Sleep", "Rest", "Dream", "Energy", "Night"], tasks: ["1. Our body needs sleep to rest.", "2. Kids need more sleep than adults.", "3. Dreaming happens when we sleep."] },
+                { id: "7-1", day: "W7D1", title: "火山爆發", video: "https://www.youtube.com/embed/TuY1NhrKIeM?start=60", time: "01:00-02:30", vocab: ["Volcano", "Magma", "Lava", "Erupt", "Ash"], tasks: ["1. Magma is hot rock inside Earth.", "2. Outside, it is called lava.", "3. Volcanoes erupt with ash and fire."] },
+                { id: "7-2", day: "W7D2", title: "水循環", video: "https://www.youtube.com/embed/fN1Cyr0ZK9M", time: "00:30-02:00", vocab: ["Cycle", "Evaporate", "Cloud", "Rain", "Water"], tasks: ["1. Water evaporates into air.", "2. It forms clouds in the sky.", "3. Rain brings water to ground."] },
+                { id: "7-3", day: "W7D3", title: "雷鳴與閃電", video: "https://www.youtube.com/embed/tDoOiwNcawk?start=60", time: "01:00-02:30", vocab: ["Thunder", "Lightning", "Storm", "Electricity", "Flash"], tasks: ["1. Lightning is electricity flash.", "2. Thunder is the sound it makes.", "3. Storms can be very loud."] },
+                { id: "7-4", day: "W7D4", title: "龍捲風", video: "https://www.youtube.com/embed/-s3UwOq1P1E?start=75", time: "01:15-02:45", vocab: ["Tornado", "Wind", "Spin", "Storm", "Safety"], tasks: ["1. A tornado is a spinning wind.", "2. It is a powerful storm.", "3. Stay in a safe place."] },
+                { id: "7-5", day: "W7D5", title: "季節的成因", video: "https://www.youtube.com/embed/UQjT5uKp2hg?start=45", time: "00:45-02:15", vocab: ["Season", "Orbit", "Tilt", "Summer", "Winter"], tasks: ["1. Earth tilts as it orbits Sun.", "2. Tilt causes different seasons.", "3. Summer is hot, winter is cold."] },
+                { id: "8-1", day: "W8D1", title: "地球的起源", video: "https://www.youtube.com/embed/fJ0J4mbj0_o?start=60", time: "01:00-02:30", vocab: ["Planet", "Space", "Dust", "Gravity", "Birth"], tasks: ["1. Earth was born from dust/gas.", "2. Gravity pulled things together.", "3. It took a long time to form."] },
+                { id: "8-2", day: "W8D2", title: "認識岩石", video: "https://www.youtube.com/embed/TuY1NhrKIeM?start=120", time: "02:00-03:30", vocab: ["Rock", "Igneous", "Sedimentary", "Metamorphic", "Hard"], tasks: ["1. There are 3 main rock types.", "2. Igneous comes from volcanoes.", "3. Rocks change over millions of years."] },
+                { id: "8-3", day: "W8D3", title: "地區生物多樣性", video: "https://www.youtube.com/embed/Q-J2FErZHuA?start=150", time: "02:30-04:00", vocab: ["Habitat", "Diverse", "Species", "Nature", "Environment"], tasks: ["1. Animals live in habitats.", "2. Biodiversity means many life kinds.", "3. We must protect our environment."] },
+                { id: "8-4", day: "W8D4", title: "森林的重要性", video: "https://www.youtube.com/embed/Gy60BqCnTG4", time: "00:30-02:00", vocab: ["Forest", "Tree", "Oxygen", "Animal", "Natural"], tasks: ["1. Forests give us clean air.", "2. Many animals live in trees.", "3. Trees are a natural resource."] },
+                { id: "8-5", day: "W8D5", title: "山脈如何形成", video: "https://www.youtube.com/embed/Fd_XqYE2BWY?start=60", time: "01:00-02:30", vocab: ["Mountain", "Plate", "Tectonic", "Push", "High"], tasks: ["1. Tectonic plates move slowly.", "2. They push against each other.", "3. This movement creates mountains."] }
             ]
         },
         {
-            week: "第三個月：太空與發明",
+            week: "W9-W12: 太空、物理與發明",
             days: [
-                { id: "w9d1", label: "W9D1", topic: "太陽恆星", vid: "w36yxLgwUOc", start: 60, tasks: [{ sentence: "Sun is at the center.", vocab: ["Center", "Orbit"] }, { sentence: "Planets orbit around Sun.", vocab: ["Energy", "Heat"] }, { sentence: "Gravity keeps things in place.", vocab: ["Gravity", "Place"] }] },
-                { id: "w9d2", label: "W9D2", topic: "內行星", vid: "mRzasmJ_RmU", start: 30, tasks: [{ sentence: "Inner planets are rocky.", vocab: ["Mercury", "Venus"] }, { sentence: "Mercury closest to Sun.", vocab: ["Earth", "Mars"] }, { sentence: "Mars is the Red Planet.", vocab: ["Surface", "Planet"] }] },
-                { id: "w9d3", label: "W9D3", topic: "外行星", vid: "mRzasmJ_RmU", start: 120, tasks: [{ sentence: "Outer planets are gas giants.", vocab: ["Jupiter", "Saturn"] }, { sentence: "Jupiter is the largest.", vocab: ["Uranus", "Neptune"] }, { sentence: "Saturn is famous for rings.", vocab: ["Gas", "Ring"] }] },
-                { id: "w9d4", label: "W9D4", topic: "月亮相位", vid: "ZjOmLfE-O6I", start: 180, tasks: [{ sentence: "Moon reflects sunlight.", vocab: ["Reflection", "Cycle"] }, { sentence: "Takes month to orbit Earth.", vocab: ["Full Moon", "Crescent"] }, { sentence: "Moon shape appears change.", vocab: ["Orbit", "Change"] }] },
-                { id: "w9d5", label: "W9D5", topic: "住火星嗎", vid: "V5RSpMQQOpw", start: 60, tasks: [{ sentence: "Scientists want humans on Mars.", vocab: ["Spacecraft", "Astronaut"] }, { sentence: "Journey takes a long time.", vocab: ["Planet", "Cold"] }, { sentence: "Cold and dry planet.", vocab: ["Journey", "Dry"] }] },
-                { id: "w10d1", label: "W10D1", topic: "萬有引力", vid: "fN1Cyr0ZK9M", start: 45, tasks: [{ sentence: "Gravity pulls things.", vocab: ["Gravity", "Force"] }, { sentence: "Keeps us on the ground.", vocab: ["Pull", "Ground"] }, { sentence: "Newton discovered gravity.", vocab: ["Newton", "Discover"] }] },
-                { id: "w10d2", label: "W10D2", topic: "影子形成", vid: "fN1Cyr0ZK9M", start: 30, tasks: [{ sentence: "Shadow forms when light blocks.", vocab: ["Shadow", "Light"] }, { sentence: "Shape changes with light.", vocab: ["Block", "Shape"] }, { sentence: "Shadows long in morning.", vocab: ["Sun", "Long"] }] },
-                { id: "w10d3", label: "W10D3", topic: "簡單機械", vid: "tk9iUjMEnaY", start: 90, tasks: [{ sentence: "Lever helps lift heavy things.", vocab: ["Lever", "Force"] }, { sentence: "Simple machine.", vocab: ["Lift", "Tool"] }, { sentence: "Levers in playground.", vocab: ["Simple", "Playground"] }] },
-                { id: "w10d4", label: "W10D4", topic: "滑輪作用", vid: "tk9iUjMEnaY", start: 240, tasks: [{ sentence: "Pulley uses rope and wheel.", vocab: ["Pulley", "Rope"] }, { sentence: "Raise heavy weights.", vocab: ["Wheel", "Raise"] }, { sentence: "Pulleys on sailboats.", vocab: ["Weight", "Sailboat"] }] },
-                { id: "w10d5", label: "W10D5", topic: "磁鐵魔力", vid: "fN1Cyr0ZK9M", start: 60, tasks: [{ sentence: "Magnets pull metals.", vocab: ["Magnet", "Pull"] }, { sentence: "N/S poles.", vocab: ["Metal", "North"] }, { sentence: "Like poles push away.", vocab: ["South", "Push"] }] },
-                { id: "w11d1", label: "W11D1", topic: "巧克力發明", vid: "Yr88rbWb-7E", start: 5, tasks: [{ sentence: "Chocolate from cacao beans.", vocab: ["Chocolate", "Invention"] }, { sentence: "Once a bitter drink.", vocab: ["Bean", "Tasty"] }, { sentence: "Tasty treat for all.", vocab: ["History", "Treat"] }] },
-                { id: "w11d2", label: "W11D2", topic: "洋芋片故事", vid: "Yr88rbWb-7E", start: 292, tasks: [{ sentence: "Chef invented chips.", vocab: ["Potato", "Snack"] }, { sentence: "Thin/salty/crisp.", vocab: ["Invention", "Salty"] }, { sentence: "Popular snack.", vocab: ["Crisp", "Popular"] }] },
-                { id: "w11d3", label: "W11D3", topic: "微波爐原理", vid: "Yr88rbWb-7E", start: 798, tasks: [{ sentence: "Heat food fast.", vocab: ["Microwave", "Heat"] }, { sentence: "Discovered by scientist.", vocab: ["Invention", "Fast"] }, { sentence: "Most kitchens have one.", vocab: ["Kitchen", "Scientist"] }] },
-                { id: "w11d4", label: "W11D4", topic: "便利貼發明", vid: "nMkW5JXyclg", start: 30, tasks: [{ sentence: "Glue not too strong.", vocab: ["Sticky", "Note"] }, { sentence: "Stick and pull off.", vocab: ["Glue", "Invention"] }, { sentence: "Useful for notes.", vocab: ["Office", "Useful"] }] },
-                { id: "w11d5", label: "W11D5", topic: "電腦運作", vid: "V5RSpMQQOpw", start: 60, tasks: [{ sentence: "Process data.", vocab: ["Computer", "Data"] }, { sentence: "Code called binary.", vocab: ["Screen", "Code"] }, { sentence: "Internet.", vocab: ["Internet", "Binary"] }] },
-                { id: "w12d1", label: "W12D1", topic: "自然資源", vid: "ajk-pvm5vfQ", start: 60, tasks: [{ sentence: "Nature gives resources.", vocab: ["Natural", "Resource"] }, { sentence: "Water/sun are natural.", vocab: ["Water", "Energy"] }, { sentence: "Save resources.", vocab: ["Save", "Earth"] }] },
-                { id: "w12d2", label: "W12D2", topic: "再生能源", vid: "ajk-pvm5vfQ", start: 180, tasks: [{ sentence: "Solar from Sun.", vocab: ["Renewable", "Wind"] }, { sentence: "Wind power clean.", vocab: ["Solar", "Clean"] }, { sentence: "Never runs out.", vocab: ["Earth", "Energy"] }] },
-                { id: "w12d3", label: "W12D3", topic: "減少污染", vid: "MQLadfsvfLo", start: 90, tasks: [{ sentence: "Plastic hurts ocean.", vocab: ["Pollution", "Trash"] }, { sentence: "Reduce pollution.", vocab: ["Plastic", "Earth"] }, { sentence: "Take care of Earth.", vocab: ["Care", "Ocean"] }] },
-                { id: "w12d4", label: "W12D4", topic: "未來發明", vid: "V5RSpMQQOpw", start: 60, tasks: [{ sentence: "Robots help future.", vocab: ["Future", "Robot"] }, { sentence: "Dream big.", vocab: ["Space", "Science"] }, { sentence: "Change life.", vocab: ["Dream", "Invention"] }] },
-                { id: "w12d5", label: "W12D5", topic: "總結成就", vid: "Gy60BqCnTG4", start: 0, tasks: [{ sentence: "Finished 12-week plan!", vocab: ["Review", "Master"] }, { sentence: "New words.", vocab: ["Progress", "Goal"] }, { sentence: "English better.", vocab: ["English", "Better"] }] }
+                { id: "9-1", day: "W9D1", title: "太陽：我們的恆星", video: "https://www.youtube.com/embed/w36yxLgwUOc?start=60", time: "01:00-02:30", vocab: ["Center", "Orbit", "Energy", "Heat", "Gravity"], tasks: ["1. The Sun is at the center.", "2. All planets orbit the Sun.", "3. Gravity keeps things in place."] },
+                { id: "9-2", day: "W9D2", title: "內行星（岩石）", video: "https://www.youtube.com/embed/mRzasmJ_RmU?start=30", time: "00:30-02:00", vocab: ["Mercury", "Venus", "Earth", "Mars", "Surface"], tasks: ["1. Inner planets are rocky.", "2. Mercury is closest to Sun.", "3. Mars is the Red Planet."] },
+                { id: "9-3", day: "W9D3", title: "外行星（氣體）", video: "https://www.youtube.com/embed/mRzasmJ_RmU?start=120", time: "02:00-03:30", vocab: ["Jupiter", "Saturn", "Uranus", "Neptune", "Gas"], tasks: ["1. Outer planets are gas giants.", "2. Jupiter is the largest.", "3. Saturn is famous for its rings."] },
+                { id: "9-4", day: "W9D4", title: "月亮的相位", video: "https://www.youtube.com/embed/ZjOmLfE-O6I?start=180", time: "03:00-04:30", vocab: ["Reflection", "Cycle", "Full Moon", "Crescent", "Orbit"], tasks: ["1. Moon reflects sunlight.", "2. It takes a month to orbit Earth.", "3. Moon's shape appears to change."] },
+                { id: "9-5", day: "W9D5", title: "我們能住火星嗎", video: "https://www.youtube.com/embed/V5RSpMQQOpw?start=60", time: "01:00-02:30", vocab: ["Spacecraft", "Astronaut", "Planet", "Cold", "Journey"], tasks: ["1. Scientists want humans on Mars.", "2. The journey takes a long time.", "3. It is a cold and dry planet."] },
+                { id: "10-1", day: "W10D1", title: "什麼是萬有引力", video: "https://www.youtube.com/embed/fN1Cyr0ZK9M?start=45", time: "00:45-02:15", vocab: ["Gravity", "Force", "Pull", "Ground", "Newton"], tasks: ["1. Gravity is a pulling force.", "2. It keeps us on the ground.", "3. Isaac Newton discovered gravity."] },
+                { id: "10-2", day: "W10D2", title: "影子怎麼形成", video: "https://www.youtube.com/embed/fN1Cyr0ZK9M?start=30", time: "00:30-02:00", vocab: ["Shadow", "Light", "Block", "Shape", "Sun"], tasks: ["1. Shadow forms when light blocks.", "2. Shape changes with light.", "3. Shadows are long in the morning."] },
+                { id: "10-3", day: "W10D3", title: "簡單機械：槓桿", video: "https://www.youtube.com/embed/tk9iUjMEnaY?start=90", time: "01:30-03:00", vocab: ["Lever", "Force", "Lift", "Tool", "Simple"], tasks: ["1. A lever helps lift heavy things.", "2. It is a simple machine.", "3. You see levers in playgrounds."] },
+                { id: "10-4", day: "W10D4", title: "滑輪的作用", video: "https://www.youtube.com/embed/tk9iUjMEnaY?start=240", time: "04:00-05:30", vocab: ["Pulley", "Rope", "Wheel", "Raise", "Weight"], tasks: ["1. A pulley uses rope and wheel.", "2. It helps raise heavy weights.", "3. Pulleys are used on sailboats."] },
+                { id: "10-5", day: "W10D5", title: "磁鐵的魔力", video: "https://www.youtube.com/embed/fN1Cyr0ZK9M", time: "01:00-02:30", vocab: ["Magnet", "Pull", "Metal", "North", "South"], tasks: ["1. Magnets pull certain metals.", "2. They have N/S poles.", "3. Like poles push each other away."] },
+                { id: "11-1", day: "W11D1", title: "巧克力發明史", video: "https://www.youtube.com/embed/Yr88rbWb-7E?start=5", time: "00:05-01:35", vocab: ["Chocolate", "Invention", "Bean", "Tasty", "History"], tasks: ["1. Chocolate from cacao beans.", "2. It was once a bitter drink.", "3. Now it is a tasty treat for all."] },
+                { id: "11-2", day: "W11D2", title: "洋芋片的故事", video: "https://www.youtube.com/embed/Yr88rbWb-7E?start=292", time: "04:52-06:22", vocab: ["Potato", "Snack", "Invention", "Salty", "Crisp"], tasks: ["1. Chef invented chips by accident.", "2. They are thin, salty and crisp.", "3. It is a very popular snack."] },
+                { id: "11-3", day: "W11D3", title: "微波爐原理", video: "https://www.youtube.com/embed/Yr88rbWb-7E?start=798", time: "13:18-14:48", vocab: ["Microwave", "Heat", "Invention", "Fast", "Kitchen"], tasks: ["1. Microwaves heat food fast.", "2. It was found by a scientist.", "3. Most kitchens have one today."] },
+                { id: "11-4", day: "W11D4", title: "便利貼發明", video: "https://www.youtube.com/embed/nMkW5JXyclg?start=30", time: "00:30-02:00", vocab: ["Sticky", "Note", "Glue", "Invention", "Office"], tasks: ["1. Glue on note is not too strong.", "2. You can stick/pull it off.", "3. It is useful for making notes."] },
+                { id: "11-5", day: "W11D5", title: "電腦如何運作", video: "https://www.youtube.com/embed/V5RSpMQQOpw?start=60", time: "01:00-02:30", vocab: ["Computer", "Data", "Screen", "Code", "Internet"], tasks: ["1. Computers process a lot of data.", "2. They use binary code.", "3. We use them for Internet."] },
+                { id: "12-1", day: "W12D1", title: "自然資源", video: "https://www.youtube.com/embed/ajk-pvm5vfQ?start=60", time: "01:00-02:30", vocab: ["Natural", "Resource", "Water", "Energy", "Save"], tasks: ["1. Nature gives many resources.", "2. Water/sun are natural resources.", "3. We should save our resources."] },
+                { id: "12-2", day: "W12D2", title: "再生能源", video: "https://www.youtube.com/embed/ajk-pvm5vfQ?start=180", time: "03:00-04:30", vocab: ["Renewable", "Wind", "Solar", "Earth", "Clean"], tasks: ["1. Solar energy comes from Sun.", "2. Wind power is clean energy.", "3. Renewable means it never ends."] },
+                { id: "12-3", day: "W12D3", title: "減少污染", video: "https://www.youtube.com/embed/MQLadfsvfLo?start=90", time: "01:30-03:00", vocab: ["Pollution", "Trash", "Plastic", "Earth", "Care"], tasks: ["1. Plastic trash hurts the ocean.", "2. We need to reduce pollution.", "3. Take care of our beautiful Earth."] },
+                { id: "12-4", day: "W12D4", title: "未來的發明", video: "https://www.youtube.com/embed/V5RSpMQQOpw?start=60", time: "01:00-02:30", vocab: ["Future", "Robot", "Space", "Science", "Dream"], tasks: ["1. Robots will help in the future.", "2. Science helps us dream big.", "3. New inventions change our life."] },
+                { id: "12-5", day: "W12D5", title: "總複習與成就", video: "", time: "Final Day", vocab: ["Review", "Master", "Progress", "Goal", "English"], tasks: ["1. I finished my 12-week plan!", "2. I learned many new words.", "3. My English is getting better!"] }
             ]
         }
     ];
 
-    const dbName = "EnglishStudioDB";
-    const request = indexedDB.open(dbName, 4);
-    request.onupgradeneeded = (e) => {
-        const db = e.target.result;
-        if (!db.objectStoreNames.contains("recordings")) {
-            db.createObjectStore("recordings", { keyPath: "id", autoIncrement: true });
-        }
-    };
-    request.onsuccess = (e) => {
-        db = e.target.result;
-        loadHistory();
-        renderSidebar();
-    };
+    function initSidebar() {
+        const menu = document.getElementById('menu-list');
+        planData.forEach((weekGroup, index) => {
+            const header = document.createElement('div');
+            header.className = 'week-section';
+            header.innerHTML = `<span>${weekGroup.week}</span><span>▼</span>`;
+            
+            const dayList = document.createElement('div');
+            dayList.className = 'day-list';
+            if(index === 0) dayList.classList.add('active'); // 預設展開第一週
 
-    function renderSidebar() {
-        const menu = document.getElementById('menu');
-        if (!menu) return;
-        const history = JSON.parse(localStorage.getItem('study_done') || '[]');
-        menu.innerHTML = '';
-        planData.forEach(w => {
-            const wt = document.createElement('div');
-            wt.className = 'week-title';
-            wt.innerText = w.week;
-            menu.appendChild(wt);
-            w.days.forEach(d => {
-                const di = document.createElement('div');
-                di.className = `day-item ${history.includes(d.id) ? 'active' : ''}`;
-                di.innerHTML = `<span>${d.label} ${d.topic}</span><div class="status-dot ${history.includes(d.id)?'done':''}"></div>`;
-                di.onclick = () => loadDay(d);
-                menu.appendChild(di);
+            header.onclick = () => dayList.classList.toggle('active');
+
+            weekGroup.days.forEach(day => {
+                const item = document.createElement('div');
+                item.className = 'menu-item';
+                item.innerText = `${day.day}: ${day.title}`;
+                item.onclick = (e) => {
+                    e.stopPropagation();
+                    loadContent(day, item);
+                };
+                dayList.appendChild(item);
             });
-        });
-        const totalStudyDays = 60;
-        const percent = Math.min(Math.round((history.length / totalStudyDays) * 100), 100);
-        document.getElementById('progress-text').innerText = `已完成 ${history.length} 天 / ${totalStudyDays} 天 (${percent}%)`;
-        document.getElementById('progress-fill').style.width = percent + '%';
-    }
 
-    function loadDay(day) {
-        document.getElementById('content').style.display = 'block';
-        document.getElementById('day-label').innerText = day.label;
-        document.getElementById('day-topic').innerText = day.topic;
-        const container = document.getElementById('tasks-container');
-        container.innerHTML = '';
-        day.tasks.forEach(task => {
-            const card = document.createElement('div');
-            card.className = 'task-card';
-            card.innerHTML = `
-                <div style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:12px;">${task.vocab.map(v => `<span style="background:#334155; padding:4px 10px; border-radius:15px; font-size:0.85em;">${v} <button onclick="speak('${v}')" style="background:none; border:none; color:white; padding:0; cursor:pointer;">🔊</button></span>`).join('')}</div>
-                <div class="sentence-text">"${task.sentence}"</div>
-                <div style="display:flex; gap:10px;">
-                    <button class="btn-play" onclick="speak('${task.sentence.replace(/"/g,'')}')">🔊 聆聽</button>
-                    <button class="btn-rec" onclick="startChallenge(this, '${task.sentence.replace(/"/g,'')}')">🎤 錄音挑戰</button>
-                </div>
-            `;
-            container.appendChild(card);
-        });
-        if (player && player.loadVideoById) {
-            player.loadVideoById({ videoId: day.vid, startSeconds: day.start });
-        }
-        let done = JSON.parse(localStorage.getItem('study_done') || '[]');
-        if(!done.includes(day.id)) {
-            done.push(day.id);
-            localStorage.setItem('study_done', JSON.stringify(done));
-            renderSidebar();
-        }
-    }
-
-    function speak(text) {
-        const msg = new SpeechSynthesisUtterance(text);
-        msg.lang = 'en-US';
-        speechSynthesis.speak(msg);
-    }
-
-    function startChallenge(btn, targetText) {
-        if (isRecording) return;
-        isRecording = true;
-        btn.classList.add('recording');
-        btn.innerText = "🛑 錄音中...";
-        let finalScore = "⭐", recognizedText = "";
-        if (Recognition) {
-            const rec = new Recognition();
-            rec.lang = 'en-US';
-            rec.onresult = e => { 
-                recognizedText = e.results[0][0].transcript.toLowerCase(); 
-                const target = targetText.toLowerCase().replace(/[.,!?]/g, '');
-                if (recognizedText === target) finalScore = "⭐⭐⭐⭐⭐ (Perfect!)";
-                else if (target.includes(recognizedText)) finalScore = "⭐⭐⭐ (Good)";
-            };
-            rec.start();
-        }
-        navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
-            const mediaRecorder = new MediaRecorder(stream);
-            let chunks = [];
-            mediaRecorder.ondataavailable = e => chunks.push(e.data);
-            mediaRecorder.onstop = () => {
-                const blob = new Blob(chunks, { type: 'audio/webm' });
-                saveRecord(blob, targetText, finalScore, recognizedText);
-                isRecording = false;
-                btn.classList.remove('recording');
-                btn.innerText = "🎤 錄音挑戰";
-            };
-            mediaRecorder.start();
-            setTimeout(() => mediaRecorder.stop(), 4000);
+            menu.appendChild(header);
+            menu.appendChild(dayList);
         });
     }
 
-    function saveRecord(blob, label, score, transcript) {
-        const reader = new FileReader();
-        reader.readAsDataURL(blob);
-        reader.onloadend = () => {
-            const tx = db.transaction(["recordings"], "readwrite");
-            tx.objectStore("recordings").add({ label, score, transcript, data: reader.result, time: new Date().toLocaleString() });
-            tx.oncomplete = () => loadHistory();
-        };
+    function loadContent(data, element) {
+        document.getElementById('welcome-screen').style.display = 'none';
+        document.getElementById('display-area').style.display = 'block';
+        
+        document.querySelectorAll('.menu-item').forEach(el => el.classList.remove('active'));
+        element.classList.add('active');
+
+        document.getElementById('day-title').innerText = data.day;
+        document.getElementById('topic-title').innerText = data.title;
+        document.getElementById('time-tag').innerText = `推薦觀看時段: ${data.time}`;
+        document.getElementById('video-player').src = data.video;
+
+        const vocabContainer = document.getElementById('vocab-container');
+        vocabContainer.innerHTML = '';
+        data.vocab.forEach(v => {
+            const tag = document.createElement('div');
+            tag.className = 'vocab-tag';
+            tag.innerText = v;
+            vocabContainer.appendChild(tag);
+        });
+
+        const taskBox = document.getElementById('task-content');
+        taskBox.innerHTML = '';
+        data.tasks.forEach(t => {
+            const p = document.createElement('div');
+            p.className = 'task-sentence';
+            p.innerText = t;
+            taskBox.appendChild(p);
+        });
+        
+        // 自動捲動到頂部
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    function loadHistory() {
-        const list = document.getElementById('history-list');
-        if(!list || !db) return;
-        list.innerHTML = '';
-        db.transaction("recordings").objectStore("recordings").openCursor(null, "prev").onsuccess = e => {
-            const cursor = e.target.result;
-            if (cursor) {
-                const div = document.createElement('div');
-                div.className = 'audio-item';
-                div.innerHTML = `<div style="display:flex; justify-content:space-between; margin-bottom:8px;"><strong>${cursor.value.label}</strong> <span style="color:#ffca28">${cursor.value.score}</span><button onclick="deleteRecord(${cursor.value.id})" style="background:none; border:none; color:white; cursor:pointer;">🗑️</button></div><audio controls src="${cursor.value.data}"></audio>`;
-                list.appendChild(div);
-                cursor.continue();
-            }
-        };
-    }
-
-    function deleteRecord(id) {
-        if(confirm("刪除紀錄？")) {
-            db.transaction(["recordings"], "readwrite").objectStore("recordings").delete(id).oncomplete = () => loadHistory();
-        }
-    }
-
-    function onYouTubeIframeAPIReady() {
-        player = new YT.Player('player', { height: '100%', width: '100%', videoId: 'Gy60BqCnTG4' });
-    }
-    const tag = document.createElement('script');
-    tag.src = "https://www.youtube.com/iframe_api";
-    document.head.appendChild(tag);
+    window.onload = initSidebar;
 </script>
+
 </body>
 </html>
