@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>小英雄 12 週英語挑戰：進階美化版</title>
+    <title>12週英語挑戰：進階美化版</title>
     <style>
         :root {
             --bg: #0f1114; --sidebar: #16181d; --card: rgba(30, 34, 42, 0.7);
@@ -11,58 +11,48 @@
             --text: #e0e0e0; --dim: #94a3b8; --success: #81c784;
             --danger: #ff5252; --border: rgba(255, 255, 255, 0.08);
         }
-
         body { font-family: 'Inter', 'PingFang TC', sans-serif; background: var(--bg); color: var(--text); display: flex; margin: 0; height: 100vh; overflow: hidden; }
-
         .sidebar { width: 320px; background: var(--sidebar); border-right: 1px solid var(--border); display: flex; flex-direction: column; }
         .sidebar-header { padding: 25px; border-bottom: 1px solid var(--border); }
-
         .progress-box { background: #1e222a; padding: 18px; border-radius: 12px; margin-top: 15px; border: 1px solid var(--border); }
         .progress-bar-bg { background: #334155; height: 8px; border-radius: 4px; overflow: hidden; position: relative; }
         .progress-bar-fill { background: linear-gradient(90deg, #42a5f5, #90caf9); height: 100%; transition: width 0.8s cubic-bezier(0.34, 1.56, 0.64, 1); position: relative; }
         .progress-bar-fill::after { content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent); animation: shine 3s infinite; }
         @keyframes shine { to { left: 150%; } }
-
-        .menu-list { flex-grow: 1; overflow-y: auto; scrollbar-width: thin; }
+        .menu-list { flex-grow: 1; overflow-y: auto; }
         .week-title { padding: 15px 20px; background: rgba(255,255,255,0.03); font-size: 0.8em; letter-spacing: 1px; color: var(--dim); }
         .day-item { padding: 14px 25px; font-size: 0.9em; cursor: pointer; transition: 0.3s; display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.02); }
         .day-item.active { background: rgba(100, 181, 246, 0.1); color: var(--accent); border-left: 4px solid var(--accent); }
         .status-dot { width: 8px; height: 8px; border-radius: 50%; background: #444; align-self: center; }
         .status-dot.done { background: var(--success); }
-
         .main { flex-grow: 1; overflow-y: auto; padding: 40px; }
         .container { max-width: 850px; margin: 0 auto; }
         .video-box { width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 12px; overflow: hidden; margin-bottom: 30px; border: 1px solid var(--border); }
-        
         .task-card { background: var(--card); backdrop-filter: blur(12px); border-radius: 16px; padding: 25px; margin-bottom: 25px; border: 1px solid var(--border); box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
         .sentence-text { font-size: 1.3em; color: var(--accent); margin: 15px 0; font-weight: 500; text-shadow: 0 0 10px var(--accent-glow); }
-
         button { border: none; padding: 10px 20px; border-radius: 10px; cursor: pointer; font-weight: 600; transition: 0.2s; }
         .btn-play { background: #334155; color: white; margin-right: 10px; }
         .btn-rec { background: var(--accent); color: #0f1114; }
         .btn-rec.recording { background: var(--danger); color: white; animation: pulse-red 1.5s infinite; }
         @keyframes pulse-red { 0% { box-shadow: 0 0 0 0 rgba(239, 83, 80, 0.7); } 70% { box-shadow: 0 0 0 15px rgba(239, 83, 80, 0); } 100% { box-shadow: 0 0 0 0 rgba(239, 83, 80, 0); } }
-
         .audio-item { background: rgba(255, 255, 255, 0.03); padding: 20px; border-radius: 14px; margin-bottom: 15px; border: 1px solid var(--border); display: flex; flex-direction: column; gap: 10px; }
-        audio { height: 35px; width: calc(100% - 50px); filter: invert(90%) hue-rotate(180deg) brightness(1.2); }
+        audio { height: 35px; width: 100%; filter: invert(90%) hue-rotate(180deg) brightness(1.2); }
         .btn-delete { background: transparent; color: var(--dim); align-self: flex-end; }
         .vocab-list { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
         .vocab-item { background: rgba(255,255,255,0.05); padding: 4px 12px; border-radius: 15px; font-size: 0.85em; display: flex; align-items: center; gap: 5px; }
     </style>
 </head>
 <body>
-
 <div class="sidebar">
     <div class="sidebar-header">
         <h3 style="margin:0">English Learning</h3>
         <div class="progress-box">
-            <div id="progress-text" class="progress-text">已完成 0 天 / 84 天 (0%)</div>
+            <div id="progress-text" class="progress-text">載入中...</div>
             <div class="progress-bar-bg"><div id="progress-fill" class="progress-bar-fill" style="width:0%"></div></div>
         </div>
     </div>
     <div id="menu" class="menu-list"></div>
 </div>
-
 <div class="main">
     <div id="content" style="display:none" class="container">
         <h2 id="day-label" style="margin:0; color:var(--accent)"></h2>
@@ -75,12 +65,10 @@
         </div>
     </div>
 </div>
-
 <script>
     let player, db, isRecording = false;
     const Recognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 
-    // 資料初始化與側邊欄顯示
     const planData = [
         {
             week: "第一個月：自然界觀察者",
@@ -127,7 +115,7 @@
                 { id: "w7d5", label: "W7D5", topic: "季節的成因", vid: "UQjT5uKp2hg", start: 45, tasks: [{ sentence: "Earth tilts as it orbits the Sun.", vocab: ["Season", "Orbit"] }, { sentence: "Tilt causes different seasons.", vocab: ["Tilt", "Summer"] }, { sentence: "Summer is hot and winter is cold.", vocab: ["Winter", "Cold"] }] },
                 { id: "w8d1", label: "W8D1", topic: "地球的起源", vid: "fJ0J4mbj0_o", start: 60, tasks: [{ sentence: "Earth was born from dust and gas.", vocab: ["Planet", "Space"] }, { sentence: "Gravity pulled everything together.", vocab: ["Dust", "Gravity"] }, { sentence: "It took a long time to form.", vocab: ["Birth", "Form"] }] },
                 { id: "w8d2", label: "W8D2", topic: "認識岩石", vid: "TuY1NhrKIeM", start: 120, tasks: [{ sentence: "There are three main types of rocks.", vocab: ["Rock", "Igneous"] }, { sentence: "Igneous rocks come from volcanoes.", vocab: ["Sedimentary", "Metamorphic"] }, { sentence: "Rocks change over millions of years.", vocab: ["Hard", "Change"] }] },
-                { id: "w8d3", label: "W8D3", topic: "地區生物多樣性", vid: "Q-J2FErZHuA", start: 150, tasks: [{ sentence: "Animals live in different habitats.", vocab: ["Habitat", "Diverse"] }, { sentence: "Biodiversity means many kinds of life.", vocab: ["Species", "Nature"] }, { sentence: "We must protect our environment.", vocab: ["Environment", "Life"] }] },
+                { id: "w8d3", label: "W8D3", topic: "地區生物多樣性", vid: "Q-J2FEZHuA", start: 150, tasks: [{ sentence: "Animals live in different habitats.", vocab: ["Habitat", "Diverse"] }, { sentence: "Biodiversity means many kinds of life.", vocab: ["Species", "Nature"] }, { sentence: "We must protect our environment.", vocab: ["Environment", "Life"] }] },
                 { id: "w8d4", label: "W8D4", topic: "森林的重要性", vid: "Gy60BqCnTG4", start: 30, tasks: [{ sentence: "Forests give us clean air.", vocab: ["Forest", "Tree"] }, { sentence: "Many animals live in the trees.", vocab: ["Oxygen", "Animal"] }, { sentence: "Trees are a natural resource.", vocab: ["Natural", "Resource"] }] },
                 { id: "w8d5", label: "W8D5", topic: "山脈如何形成", vid: "Fd_XqYE2BWY", start: 60, tasks: [{ sentence: "Tectonic plates move very slowly.", vocab: ["Mountain", "Plate"] }, { sentence: "They push against each other.", vocab: ["Tectonic", "Push"] }, { sentence: "This movement creates high mountains.", vocab: ["High", "Move"] }] }
             ]
@@ -135,7 +123,7 @@
         {
             week: "第三個月：太空、物理與發明",
             days: [
-                { id: "w9d1", label: "W9D1", topic: "太陽：我們的恆星", vid: "w36yxLgwUOc", start: 60, tasks: [{ sentence: "The Sun is at the center of our system.", vocab: ["Center", "Orbit"] }, { sentence: "All planets orbit around the Sun.", vocab: ["Energy", "Heat"] }, { sentence: "Gravity keeps everything in place.", vocab: ["Gravity", "Place"] }] },
+                { id: "w9d1", label: "W9D1", topic: "太陽：我們的恆星", vid: "w36yxLgwUOc", start: 60, tasks: [{ sentence: "The Sun is at the center.", vocab: ["Center", "Orbit"] }, { sentence: "All planets orbit around the Sun.", vocab: ["Energy", "Heat"] }, { sentence: "Gravity keeps everything in place.", vocab: ["Gravity", "Place"] }] },
                 { id: "w9d2", label: "W9D2", topic: "內行星（岩石）", vid: "mRzasmJ_RmU", start: 30, tasks: [{ sentence: "Four inner planets have rocky surfaces.", vocab: ["Mercury", "Venus"] }, { sentence: "Mercury is the closest to the Sun.", vocab: ["Earth", "Mars"] }, { sentence: "Mars is known as the Red Planet.", vocab: ["Surface", "Planet"] }] },
                 { id: "w9d3", label: "W9D3", topic: "外行星（氣體）", vid: "mRzasmJ_RmU", start: 120, tasks: [{ sentence: "The outer planets are made of gas.", vocab: ["Jupiter", "Saturn"] }, { sentence: "Jupiter is the largest planet.", vocab: ["Uranus", "Neptune"] }, { sentence: "Saturn is famous for its rings.", vocab: ["Gas", "Ring"] }] },
                 { id: "w9d4", label: "W9D4", topic: "月亮的相位", vid: "ZjOmLfE-O6I", start: 180, tasks: [{ sentence: "The Moon reflects light from the Sun.", vocab: ["Reflection", "Cycle"] }, { sentence: "It takes a month to orbit Earth.", vocab: ["Full Moon", "Crescent"] }, { sentence: "The Moon's shape appears to change.", vocab: ["Orbit", "Change"] }] },
@@ -187,21 +175,19 @@
             card.innerHTML = `
                 <div class="vocab-list">${task.vocab.map(v => `<div class="vocab-item"><span>${v}</span><button class="btn-play" onclick="speak('${v}')">🔊</button><button class="btn-rec" onclick="startChallenge(this, '${v}')">🎤</button></div>`).join('')}</div>
                 <div class="sentence-text">"${task.sentence}"</div>
-                <div class="btn-group"><button class="btn-play" onclick="speak('${task.sentence.replace(/"/g,'')}')">🔊 聆聽句子</button><button class="btn-rec" onclick="startChallenge(this, '${task.sentence.replace(/"/g,'')}')">🎤 錄音評分</button></div>
+                <div class="btn-group"><button class="btn-play" onclick="speak('${task.sentence}')">🔊 聆聽句子</button><button class="btn-rec" onclick="startChallenge(this, '${task.sentence}')">🎤 錄音評分</button></div>
             `;
             container.appendChild(card);
         });
-        if (player) player.loadVideoById({ videoId: day.vid, startSeconds: day.start });
+        if (player && player.loadVideoById) player.loadVideoById({ videoId: day.vid, startSeconds: day.start });
         let done = JSON.parse(localStorage.getItem('study_done') || '[]');
         if(!done.includes(day.id)) { done.push(day.id); localStorage.setItem('study_done', JSON.stringify(done)); renderSidebar(); }
     }
 
     function speak(text) { const msg = new SpeechSynthesisUtterance(text); msg.lang = 'en-US'; speechSynthesis.speak(msg); }
 
-    let mediaRecorder, chunks = [];
     function startChallenge(btn, targetText) {
-        if (isRecording) return;
-        isRecording = true; btn.classList.add('recording'); btn.innerText = "🛑 評分中...";
+        if (isRecording) return; isRecording = true; btn.classList.add('recording'); btn.innerText = "🛑 評分中...";
         let finalScore = "⭐", recognizedText = "";
         if (Recognition) {
             const rec = new Recognition(); rec.lang = 'en-US';
@@ -214,11 +200,10 @@
             rec.start();
         }
         navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
-            mediaRecorder = new MediaRecorder(stream); chunks = [];
+            const mediaRecorder = new MediaRecorder(stream); let chunks = [];
             mediaRecorder.ondataavailable = e => chunks.push(e.data);
             mediaRecorder.onstop = () => {
-                const blob = new Blob(chunks, { type: 'audio/webm' });
-                saveRecord(blob, targetText, finalScore, recognizedText);
+                const blob = new Blob(chunks, { type: 'audio/webm' }); saveRecord(blob, targetText, finalScore, recognizedText);
                 isRecording = false; btn.classList.remove('recording'); btn.innerText = btn.classList.contains('btn-play') ? "🔊" : "🎤 錄音評分";
             };
             mediaRecorder.start(); setTimeout(() => mediaRecorder.stop(), 4000);
@@ -235,10 +220,8 @@
     }
 
     function loadHistory() {
-        if(!db) return;
-        const list = document.getElementById('history-list'); list.innerHTML = '';
-        const store = db.transaction("recordings").objectStore("recordings");
-        store.openCursor(null, "prev").onsuccess = e => {
+        if(!db) return; const list = document.getElementById('history-list'); list.innerHTML = '';
+        db.transaction("recordings").objectStore("recordings").openCursor(null, "prev").onsuccess = e => {
             const cursor = e.target.result;
             if (cursor) {
                 const div = document.createElement('div'); div.className = 'audio-item';
@@ -250,8 +233,7 @@
 
     function deleteRecord(id) { if(confirm("刪除紀錄？")) { db.transaction(["recordings"], "readwrite").objectStore("recordings").delete(id).oncomplete = () => loadHistory(); } }
 
-    function onYouTubeIframeAPIReady() { player = new YT.Player('player', { height: '100%', width: '100%', videoId: 'Gy60BqCnTG4' }); }
-    const tag = document.createElement('script'); tag.src = "https://www.youtube.com/iframe_api"; document.head.appendChild(tag);
+    function onYouTubeIframeAPIReady() { player = new YT.Player('player', { height: '100%', width: '100%', videoId: 'Gy60BqCnTG4', events: { 'onReady': renderSidebar } }); }
 </script>
 </body>
 </html>
