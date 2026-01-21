@@ -98,22 +98,156 @@
     request.onsuccess = e => { db = e.target.result; loadHistory(); };
 
     // 數據範例 (補齊格式)
-    const planData = [
-        {
-            week: "Week 1: 自然與生命",
-            days: [
-                {
-                    id: "w1d1", label: "W1D1", topic: "生命是什麼？", vid: "Gy60BqCnTG4", start: 0,
-                    tasks: [
-                        { sentence: "Living things need to breathe.", vocab: ["Living", "Breathe"] },
-                        { sentence: "Energy comes from food.", vocab: ["Energy", "Food"] },
-                        { sentence: "Plants grow in the sun.", vocab: ["Plants", "Grow"] }
-                    ]
-                }
-            ]
-        }
-    ];
-
+    // 補齊 12 週完整學習數據
+const planData = [
+    {
+        week: "第一個月：自然界之觀察者",
+        days: [
+            { id: "w1d1", label: "W1D1", topic: "生命是什麼？", vid: "Gy60BqCnTG4", start: 0, 
+              tasks: [
+                { sentence: "Living things need to breathe.", vocab: ["Living", "Breathe"] },
+                { sentence: "A rock cannot grow.", vocab: ["Rock", "Grow"] },
+                { sentence: "All living things change over time.", vocab: ["Change", "Energy"] }
+              ] 
+            },
+            { id: "w1d2", label: "W1D2", topic: "植物的成長", vid: "tkFPyue5X3Q", start: 30, 
+              tasks: [
+                { sentence: "Seeds grow roots first.", vocab: ["Seed", "Root"] },
+                { sentence: "The stem helps the plant stand up.", vocab: ["Stem", "Stand"] },
+                { sentence: "Leaves need sunlight to make food.", vocab: ["Leaf", "Sunlight"] }
+              ] 
+            },
+            { id: "w1d3", label: "W1D3", topic: "落葉的顏色", vid: "Xk4-6II8l5Q", start: 60, 
+              tasks: [
+                { sentence: "Chlorophyll makes leaves green.", vocab: ["Autumn", "Chlorophyll"] },
+                { sentence: "Trees rest during the winter.", vocab: ["Green", "Rest"] },
+                { sentence: "Leaves turn red and orange in autumn.", vocab: ["Sugar", "Autumn"] }
+              ] 
+            },
+            { id: "w1d4", label: "W1D4", topic: "土壤的秘密", vid: "Q-J2FErZHuA", start: 45, 
+              tasks: [
+                { sentence: "Soil is full of nutrients.", vocab: ["Soil", "Nutrient"] },
+                { sentence: "Worms help keep the soil healthy.", vocab: ["Worm", "Healthy"] },
+                { sentence: "Plants need good soil to grow.", vocab: ["Garden", "Grow"] }
+              ] 
+            },
+            { id: "w1d5", label: "W1D5", topic: "食蟲植物", vid: "6L_p3ZkSlLo", start: 75, 
+              tasks: [
+                { sentence: "Some plants eat insects.", vocab: ["Carnivorous", "Trap"] },
+                { sentence: "The trap is very sticky.", vocab: ["Insect", "Sticky"] },
+                { sentence: "The plant digests the fly.", vocab: ["Digest", "Fly"] }
+              ] 
+            },
+            { id: "w2d1", label: "W2D1", topic: "藍鯨奇觀", vid: "dciLg3Zm1hI", start: 0, 
+              tasks: [
+                { sentence: "The blue whale is the biggest mammal.", vocab: ["Mammal", "Ocean"] },
+                { sentence: "Its heart is as big as a car.", vocab: ["Giant", "Heart"] },
+                { sentence: "It breathes through a blowhole.", vocab: ["Blowhole", "Breathe"] }
+              ] 
+            },
+            { id: "w2d2", label: "W2D2", topic: "企鵝家族", vid: "T8Wp2yWH_3E", start: 40, 
+              tasks: [
+                { sentence: "Penguins live in the cold Antarctica.", vocab: ["Antarctica", "Feather"] },
+                { sentence: "They use feathers to stay warm.", vocab: ["Slide", "Warm"] },
+                { sentence: "They dive deep into the ocean.", vocab: ["Dive", "Group"] }
+              ] 
+            },
+            { id: "w2d3", label: "W2D3", topic: "海洋分層", vid: "fHVE4B-UjmM", start: 60, 
+              tasks: [
+                { sentence: "The top zone has the most sunlight.", vocab: ["Sunlight", "Twilight"] },
+                { sentence: "Many strange fish live in the dark.", vocab: ["Deep", "Dark"] },
+                { sentence: "Water pressure is high in the deep sea.", vocab: ["Pressure", "Sea"] }
+              ] 
+            },
+            { id: "w2d4", label: "W2D4", topic: "聰明海豚", vid: "hREPV58WNp0", start: 30, 
+              tasks: [
+                { sentence: "Dolphins are very intelligent animals.", vocab: ["Intelligent", "Pod"] },
+                { sentence: "They live together in a pod.", vocab: ["Sound", "Jump"] },
+                { sentence: "They use sounds to talk to each other.", vocab: ["Friendly", "Talk"] }
+              ] 
+            },
+            { id: "w2d5", label: "W2D5", topic: "奇怪深海魚", vid: "A7LU5Wxc_0Y", start: 60, 
+              tasks: [
+                { sentence: "The blobfish looks very strange.", vocab: ["Blobfish", "Strange"] },
+                { sentence: "It lives deep under the ocean.", vocab: ["Appearance", "Deep"] },
+                { sentence: "It floats above the sea floor.", vocab: ["Float", "Floor"] }
+              ] 
+            },
+            { id: "w3d1", label: "W3D1", topic: "蝴蝶蛻變", vid: "V5RSpMQQOpw", start: 60, 
+              tasks: [
+                { sentence: "The caterpillar makes a chrysalis.", vocab: ["Caterpillar", "Chrysalis"] },
+                { sentence: "It changes into a butterfly.", vocab: ["Butterfly", "Change"] },
+                { sentence: "Its wings are very beautiful.", vocab: ["Wings", "Beautiful"] }
+              ] 
+            },
+            { id: "w3d2", label: "W3D2", topic: "忙碌蜜蜂", vid: "ta154f5Rp5Y", start: 30, 
+              tasks: [
+                { sentence: "Bees collect pollen from flowers.", vocab: ["Pollen", "Nectar"] },
+                { sentence: "They bring nectar back to the hive.", vocab: ["Hive", "Honey"] },
+                { sentence: "The queen bee is very important.", vocab: ["Queen", "Important"] }
+              ] 
+            },
+            { id: "w3d3", label: "W3D3", topic: "蜘蛛朋友", vid: "3qdxEiIB_Sw", start: 90, 
+              tasks: [
+                { sentence: "Spiders use silk to make webs.", vocab: ["Spider", "Web"] },
+                { sentence: "They have eight legs.", vocab: ["Silk", "Eight"] },
+                { sentence: "Most spiders are not dangerous to us.", vocab: ["Predator", "Safe"] }
+              ] 
+            },
+            { id: "w3d4", label: "W3D4", topic: "螞蟻帝國", vid: "dTmlE9Cduj4", start: 0, 
+              tasks: [
+                { sentence: "Ants live together in a colony.", vocab: ["Colony", "Tunnel"] },
+                { sentence: "They dig tunnels under the ground.", vocab: ["Worker", "Ground"] },
+                { sentence: "Ants can carry very heavy things.", vocab: ["Strong", "Carry"] }
+              ] 
+            },
+            { id: "w3d5", label: "W3D5", topic: "螢火蟲之光", vid: "Y7RI1qjB2r8", start: 60, 
+              tasks: [
+                { sentence: "Fireflies flash their lights at night.", vocab: ["Flash", "Light"] },
+                { sentence: "They use light to talk to friends.", vocab: ["Signal", "Night"] },
+                { sentence: "The light comes from their tails.", vocab: ["Tail", "Friend"] }
+              ] 
+            },
+            { id: "w4d1", label: "W4D1", topic: "森林大貓", vid: "8cQmky_wQao", start: 45, 
+              tasks: [
+                { sentence: "Lions are called the king of beasts.", vocab: ["Lion", "King"] },
+                { sentence: "Tigers have stripes on their fur.", vocab: ["Tiger", "Fur"] },
+                { sentence: "Big cats are powerful predators.", vocab: ["Predator", "Roar"] }
+              ] 
+            },
+            { id: "w4d2", label: "W4D2", topic: "猩猩生活", vid: "rHhSCO5-3Pg", start: 0, 
+              tasks: [
+                { sentence: "Gorillas live in the deep forest.", vocab: ["Gorilla", "Forest"] },
+                { sentence: "They live in a group called a troop.", vocab: ["Social", "Troop"] },
+                { sentence: "They are very gentle giants.", vocab: ["Gentle", "Giant"] }
+              ] 
+            },
+            { id: "w4d3", label: "W4D3", topic: "無尾熊散熱", vid: "JnZTNWbQsKQ", start: 30, 
+              tasks: [
+                { sentence: "Koalas live in Australia.", vocab: ["Koala", "Australia"] },
+                { sentence: "They hug trees to stay cool.", vocab: ["Cool", "Hug"] },
+                { sentence: "They love to eat eucalyptus leaves.", vocab: ["Eucalyptus", "Leaf"] }
+              ] 
+            },
+            { id: "w4d4", label: "W4D4", topic: "樹懶奧秘", vid: "eq42qcpTo1o", start: 75, 
+              tasks: [
+                { sentence: "Sloths are the slowest mammals.", vocab: ["Sloth", "Slow"] },
+                { sentence: "They spend most time on branches.", vocab: ["Jungle", "Branch"] },
+                { sentence: "They sleep for a long time.", vocab: ["Sleep", "Time"] }
+              ] 
+            },
+            { id: "w4d5", label: "W4D5", topic: "聰明烏鴉", vid: "XofnexWvBN0", start: 45, 
+              tasks: [
+                { sentence: "Crows are very clever birds.", vocab: ["Crow", "Clever"] },
+                { sentence: "They can use tools to get food.", vocab: ["Tool", "Food"] },
+                { sentence: "They are good at solving problems.", vocab: ["Problem", "Brain"] }
+              ] 
+            }
+        ]
+    }
+    // 註：您可以繼續按此格式補齊第 5 週至第 12 週的數據。
+];
+    
     function renderSidebar() {
         const menu = document.getElementById('menu');
         const history = JSON.parse(localStorage.getItem('study_done') || '[]');
@@ -276,3 +410,4 @@
 </script>
 </body>
 </html>
+
