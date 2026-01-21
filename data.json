@@ -2,17 +2,17 @@
   "weeks": [
     {
       "id": 1,
-      "title": "第 1 週：基礎問候",
-      "videoUrl": "https://www.youtube.com/embed/範例影片ID",
-      "vocabulary": ["Hello", "Good morning", "Friend"],
-      "task": "完成自我介紹練習"
+      "title": "Week 1: Greetings & Intro",
+      "videoUrl": "https://www.youtube.com/embed/fN1Cyr0ZK9M",
+      "vocabulary": ["Hello", "Nice to meet you", "Friend"],
+      "task": "學會用英文做自我介紹"
     },
     {
       "id": 2,
-      "title": "第 2 週：日常用品",
-      "videoUrl": "https://www.youtube.com/embed/範例影片ID",
-      "vocabulary": ["Book", "Pen", "Apple"],
-      "task": "指認家中的物品"
+      "title": "Week 2: Daily Routine",
+      "videoUrl": "https://www.youtube.com/embed/eUXkj6j6Ezw",
+      "vocabulary": ["Wake up", "Breakfast", "Brush teeth"],
+      "task": "用英文說出你早上的三個動作"
     }
   ]
 }
