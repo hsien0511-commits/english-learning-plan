@@ -1,18 +1,33 @@
-{
-  "weeks": [
-    {
-      "id": 1,
-      "title": "Week 1: Greetings & Intro",
-      "videoUrl": "https://www.youtube.com/embed/fN1Cyr0ZK9M",
-      "vocabulary": ["Hello", "Nice to meet you", "Friend"],
-      "task": "學會用英文做自我介紹"
-    },
-    {
-      "id": 2,
-      "title": "Week 2: Daily Routine",
-      "videoUrl": "https://www.youtube.com/embed/eUXkj6j6Ezw",
-      "vocabulary": ["Wake up", "Breakfast", "Brush teeth"],
-      "task": "用英文說出你早上的三個動作"
-    }
-  ]
+// 載入資料並生成列表
+fetch('data.json')
+    .then(response => response.json())
+    .then(data => {
+        const sidebar = document.getElementById('sidebar-list'); // 確保您的 HTML 裡有這個 ID
+        sidebar.innerHTML = ''; // 清空載入中文字
+        
+        data.weeks.forEach(week => {
+            const item = document.createElement('div');
+            item.className = 'menu-item';
+            item.innerText = week.title;
+            // 關鍵：這行負責處理點擊
+            item.onclick = () => showContent(week); 
+            sidebar.appendChild(item);
+        });
+    })
+    .catch(error => console.error('Error loading JSON:', error));
+
+// 顯示內容的函數
+function showContent(week) {
+    document.getElementById('main-title').innerText = week.title;
+    document.getElementById('video-frame').src = week.videoUrl;
+    document.getElementById('task-text').innerText = week.task;
+    
+    // 渲染單字列表
+    const vocabList = document.getElementById('vocab-list');
+    vocabList.innerHTML = '';
+    week.vocabulary.forEach(word => {
+        const li = document.createElement('li');
+        li.innerText = word;
+        vocabList.appendChild(li);
+    });
 }
