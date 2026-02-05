@@ -99,154 +99,130 @@
 
     // 數據範例 (補齊格式)
     // 補齊 12 週完整學習數據
-const planData = [
-    {
-        week: "第一個月：自然界之觀察者",
-        days: [
-            { id: "w1d1", label: "W1D1", topic: "生命是什麼？", vid: "Gy60BqCnTG4", start: 0, 
-              tasks: [
-                { sentence: "Living things need to breathe.", vocab: ["Living", "Breathe"] },
-                { sentence: "A rock cannot grow.", vocab: ["Rock", "Grow"] },
-                { sentence: "All living things change over time.", vocab: ["Change", "Energy"] }
-              ] 
-            },
-            { id: "w1d2", label: "W1D2", topic: "植物的成長", vid: "tkFPyue5X3Q", start: 30, 
-              tasks: [
-                { sentence: "Seeds grow roots first.", vocab: ["Seed", "Root"] },
-                { sentence: "The stem helps the plant stand up.", vocab: ["Stem", "Stand"] },
-                { sentence: "Leaves need sunlight to make food.", vocab: ["Leaf", "Sunlight"] }
-              ] 
-            },
-            { id: "w1d3", label: "W1D3", topic: "落葉的顏色", vid: "Xk4-6II8l5Q", start: 60, 
-              tasks: [
-                { sentence: "Chlorophyll makes leaves green.", vocab: ["Autumn", "Chlorophyll"] },
-                { sentence: "Trees rest during the winter.", vocab: ["Green", "Rest"] },
-                { sentence: "Leaves turn red and orange in autumn.", vocab: ["Sugar", "Autumn"] }
-              ] 
-            },
-            { id: "w1d4", label: "W1D4", topic: "土壤的秘密", vid: "Q-J2FErZHuA", start: 45, 
-              tasks: [
-                { sentence: "Soil is full of nutrients.", vocab: ["Soil", "Nutrient"] },
-                { sentence: "Worms help keep the soil healthy.", vocab: ["Worm", "Healthy"] },
-                { sentence: "Plants need good soil to grow.", vocab: ["Garden", "Grow"] }
-              ] 
-            },
-            { id: "w1d5", label: "W1D5", topic: "食蟲植物", vid: "6L_p3ZkSlLo", start: 75, 
-              tasks: [
-                { sentence: "Some plants eat insects.", vocab: ["Carnivorous", "Trap"] },
-                { sentence: "The trap is very sticky.", vocab: ["Insect", "Sticky"] },
-                { sentence: "The plant digests the fly.", vocab: ["Digest", "Fly"] }
-              ] 
-            },
-            { id: "w2d1", label: "W2D1", topic: "藍鯨奇觀", vid: "dciLg3Zm1hI", start: 0, 
-              tasks: [
-                { sentence: "The blue whale is the biggest mammal.", vocab: ["Mammal", "Ocean"] },
-                { sentence: "Its heart is as big as a car.", vocab: ["Giant", "Heart"] },
-                { sentence: "It breathes through a blowhole.", vocab: ["Blowhole", "Breathe"] }
-              ] 
-            },
-            { id: "w2d2", label: "W2D2", topic: "企鵝家族", vid: "T8Wp2yWH_3E", start: 40, 
-              tasks: [
-                { sentence: "Penguins live in the cold Antarctica.", vocab: ["Antarctica", "Feather"] },
-                { sentence: "They use feathers to stay warm.", vocab: ["Slide", "Warm"] },
-                { sentence: "They dive deep into the ocean.", vocab: ["Dive", "Group"] }
-              ] 
-            },
-            { id: "w2d3", label: "W2D3", topic: "海洋分層", vid: "fHVE4B-UjmM", start: 60, 
-              tasks: [
-                { sentence: "The top zone has the most sunlight.", vocab: ["Sunlight", "Twilight"] },
-                { sentence: "Many strange fish live in the dark.", vocab: ["Deep", "Dark"] },
-                { sentence: "Water pressure is high in the deep sea.", vocab: ["Pressure", "Sea"] }
-              ] 
-            },
-            { id: "w2d4", label: "W2D4", topic: "聰明海豚", vid: "hREPV58WNp0", start: 30, 
-              tasks: [
-                { sentence: "Dolphins are very intelligent animals.", vocab: ["Intelligent", "Pod"] },
-                { sentence: "They live together in a pod.", vocab: ["Sound", "Jump"] },
-                { sentence: "They use sounds to talk to each other.", vocab: ["Friendly", "Talk"] }
-              ] 
-            },
-            { id: "w2d5", label: "W2D5", topic: "奇怪深海魚", vid: "A7LU5Wxc_0Y", start: 60, 
-              tasks: [
-                { sentence: "The blobfish looks very strange.", vocab: ["Blobfish", "Strange"] },
-                { sentence: "It lives deep under the ocean.", vocab: ["Appearance", "Deep"] },
-                { sentence: "It floats above the sea floor.", vocab: ["Float", "Floor"] }
-              ] 
-            },
-            { id: "w3d1", label: "W3D1", topic: "蝴蝶蛻變", vid: "V5RSpMQQOpw", start: 60, 
-              tasks: [
-                { sentence: "The caterpillar makes a chrysalis.", vocab: ["Caterpillar", "Chrysalis"] },
-                { sentence: "It changes into a butterfly.", vocab: ["Butterfly", "Change"] },
-                { sentence: "Its wings are very beautiful.", vocab: ["Wings", "Beautiful"] }
-              ] 
-            },
-            { id: "w3d2", label: "W3D2", topic: "忙碌蜜蜂", vid: "ta154f5Rp5Y", start: 30, 
-              tasks: [
-                { sentence: "Bees collect pollen from flowers.", vocab: ["Pollen", "Nectar"] },
-                { sentence: "They bring nectar back to the hive.", vocab: ["Hive", "Honey"] },
-                { sentence: "The queen bee is very important.", vocab: ["Queen", "Important"] }
-              ] 
-            },
-            { id: "w3d3", label: "W3D3", topic: "蜘蛛朋友", vid: "3qdxEiIB_Sw", start: 90, 
-              tasks: [
-                { sentence: "Spiders use silk to make webs.", vocab: ["Spider", "Web"] },
-                { sentence: "They have eight legs.", vocab: ["Silk", "Eight"] },
-                { sentence: "Most spiders are not dangerous to us.", vocab: ["Predator", "Safe"] }
-              ] 
-            },
-            { id: "w3d4", label: "W3D4", topic: "螞蟻帝國", vid: "dTmlE9Cduj4", start: 0, 
-              tasks: [
-                { sentence: "Ants live together in a colony.", vocab: ["Colony", "Tunnel"] },
-                { sentence: "They dig tunnels under the ground.", vocab: ["Worker", "Ground"] },
-                { sentence: "Ants can carry very heavy things.", vocab: ["Strong", "Carry"] }
-              ] 
-            },
-            { id: "w3d5", label: "W3D5", topic: "螢火蟲之光", vid: "Y7RI1qjB2r8", start: 60, 
-              tasks: [
-                { sentence: "Fireflies flash their lights at night.", vocab: ["Flash", "Light"] },
-                { sentence: "They use light to talk to friends.", vocab: ["Signal", "Night"] },
-                { sentence: "The light comes from their tails.", vocab: ["Tail", "Friend"] }
-              ] 
-            },
-            { id: "w4d1", label: "W4D1", topic: "森林大貓", vid: "8cQmky_wQao", start: 45, 
-              tasks: [
-                { sentence: "Lions are called the king of beasts.", vocab: ["Lion", "King"] },
-                { sentence: "Tigers have stripes on their fur.", vocab: ["Tiger", "Fur"] },
-                { sentence: "Big cats are powerful predators.", vocab: ["Predator", "Roar"] }
-              ] 
-            },
-            { id: "w4d2", label: "W4D2", topic: "猩猩生活", vid: "rHhSCO5-3Pg", start: 0, 
-              tasks: [
-                { sentence: "Gorillas live in the deep forest.", vocab: ["Gorilla", "Forest"] },
-                { sentence: "They live in a group called a troop.", vocab: ["Social", "Troop"] },
-                { sentence: "They are very gentle giants.", vocab: ["Gentle", "Giant"] }
-              ] 
-            },
-            { id: "w4d3", label: "W4D3", topic: "無尾熊散熱", vid: "JnZTNWbQsKQ", start: 30, 
-              tasks: [
-                { sentence: "Koalas live in Australia.", vocab: ["Koala", "Australia"] },
-                { sentence: "They hug trees to stay cool.", vocab: ["Cool", "Hug"] },
-                { sentence: "They love to eat eucalyptus leaves.", vocab: ["Eucalyptus", "Leaf"] }
-              ] 
-            },
-            { id: "w4d4", label: "W4D4", topic: "樹懶奧秘", vid: "eq42qcpTo1o", start: 75, 
-              tasks: [
-                { sentence: "Sloths are the slowest mammals.", vocab: ["Sloth", "Slow"] },
-                { sentence: "They spend most time on branches.", vocab: ["Jungle", "Branch"] },
-                { sentence: "They sleep for a long time.", vocab: ["Sleep", "Time"] }
-              ] 
-            },
-            { id: "w4d5", label: "W4D5", topic: "聰明烏鴉", vid: "XofnexWvBN0", start: 45, 
-              tasks: [
-                { sentence: "Crows are very clever birds.", vocab: ["Crow", "Clever"] },
-                { sentence: "They can use tools to get food.", vocab: ["Tool", "Food"] },
-                { sentence: "They are good at solving problems.", vocab: ["Problem", "Brain"] }
-              ] 
-            }
-        ]
-    }
-    // 註：您可以繼續按此格式補齊第 5 週至第 12 週的數據。
-];
+// 12 週完整學習數據 (W1 - W12)
+    const planData = [
+        {
+            week: "Week 1: 自然界觀察者",
+            days: [
+                { id: "w1d1", label: "W1D1", topic: "生命是什麼？", vid: "Gy60BqCnTG4", start: 0, tasks: [{ sentence: "Living things need to breathe.", vocab: ["Living", "Breathe"] }, { sentence: "A rock cannot grow.", vocab: ["Rock", "Grow"] }, { sentence: "All living things change over time.", vocab: ["Change", "Energy"] }] },
+                { id: "w1d2", label: "W1D2", topic: "植物的成長", vid: "tkFPyue5X3Q", start: 30, tasks: [{ sentence: "Seeds grow roots first.", vocab: ["Seed", "Root"] }, { sentence: "The stem helps the plant stand up.", vocab: ["Stem", "Stand"] }, { sentence: "Leaves need sunlight to make food.", vocab: ["Leaf", "Sunlight"] }] },
+                { id: "w1d3", label: "W1D3", topic: "落葉的顏色", vid: "Xk4-6II8l5Q", start: 60, tasks: [{ sentence: "Chlorophyll makes leaves green.", vocab: ["Autumn", "Chlorophyll"] }, { sentence: "Trees rest during the winter.", vocab: ["Green", "Rest"] }, { sentence: "Leaves turn red and orange in autumn.", vocab: ["Sugar", "Autumn"] }] },
+                { id: "w1d4", label: "W1D4", topic: "土壤的秘密", vid: "Q-J2FErZHuA", start: 45, tasks: [{ sentence: "Soil is full of nutrients.", vocab: ["Soil", "Nutrient"] }, { sentence: "Worms help keep the soil healthy.", vocab: ["Worm", "Healthy"] }, { sentence: "Plants need good soil to grow.", vocab: ["Garden", "Grow"] }] },
+                { id: "w1d5", label: "W1D5", topic: "食蟲植物", vid: "6L_p3ZkSlLo", start: 75, tasks: [{ sentence: "Some plants eat insects.", vocab: ["Carnivorous", "Trap"] }, { sentence: "The trap is very sticky.", vocab: ["Insect", "Sticky"] }, { sentence: "The plant digests the fly.", vocab: ["Digest", "Fly"] }] }
+            ]
+        },
+        {
+            week: "Week 2: 海洋與動物",
+            days: [
+                { id: "w2d1", label: "W2D1", topic: "藍鯨奇觀", vid: "dciLg3Zm1hI", start: 0, tasks: [{ sentence: "The blue whale is the biggest mammal.", vocab: ["Mammal", "Ocean"] }, { sentence: "Its heart is as big as a car.", vocab: ["Giant", "Heart"] }, { sentence: "It breathes through a blowhole.", vocab: ["Blowhole", "Breathe"] }] },
+                { id: "w2d2", label: "W2D2", topic: "企鵝家族", vid: "T8Wp2yWH_3E", start: 40, tasks: [{ sentence: "Penguins live in the cold Antarctica.", vocab: ["Antarctica", "Feather"] }, { sentence: "They use feathers to stay warm.", vocab: ["Slide", "Warm"] }, { sentence: "They dive deep into the ocean.", vocab: ["Dive", "Group"] }] },
+                { id: "w2d3", label: "W2D3", topic: "海洋分層", vid: "fHVE4B-UjmM", start: 60, tasks: [{ sentence: "The top zone has the most sunlight.", vocab: ["Sunlight", "Twilight"] }, { sentence: "Many strange fish live in the dark.", vocab: ["Deep", "Dark"] }, { sentence: "Water pressure is high in the deep sea.", vocab: ["Pressure", "Sea"] }] },
+                { id: "w2d4", label: "W2D4", topic: "聰明海豚", vid: "hREPV58WNp0", start: 30, tasks: [{ sentence: "Dolphins are very intelligent animals.", vocab: ["Intelligent", "Pod"] }, { sentence: "They live together in a pod.", vocab: ["Sound", "Jump"] }, { sentence: "They use sounds to talk to each other.", vocab: ["Friendly", "Talk"] }] },
+                { id: "w2d5", label: "W2D5", topic: "奇怪深海魚", vid: "A7LU5Wxc_0Y", start: 60, tasks: [{ sentence: "The blobfish looks very strange.", vocab: ["Blobfish", "Strange"] }, { sentence: "It lives deep under the ocean.", vocab: ["Appearance", "Deep"] }, { sentence: "It floats above the sea floor.", vocab: ["Float", "Floor"] }] }
+            ]
+        },
+        {
+            week: "Week 3: 昆蟲世界",
+            days: [
+                { id: "w3d1", label: "W3D1", topic: "蝴蝶蛻變", vid: "V5RSpMQQOpw", start: 60, tasks: [{ sentence: "The caterpillar makes a chrysalis.", vocab: ["Caterpillar", "Chrysalis"] }, { sentence: "It changes into a butterfly.", vocab: ["Butterfly", "Change"] }, { sentence: "Its wings are very beautiful.", vocab: ["Wings", "Beautiful"] }] },
+                { id: "w3d2", label: "W3D2", topic: "忙碌蜜蜂", vid: "ta154f5Rp5Y", start: 30, tasks: [{ sentence: "Bees collect pollen from flowers.", vocab: ["Pollen", "Nectar"] }, { sentence: "They bring nectar back to the hive.", vocab: ["Hive", "Honey"] }, { sentence: "The queen bee is very important.", vocab: ["Queen", "Important"] }] },
+                { id: "w3d3", label: "W3D3", topic: "蜘蛛朋友", vid: "3qdxEiIB_Sw", start: 90, tasks: [{ sentence: "Spiders use silk to make webs.", vocab: ["Spider", "Web"] }, { sentence: "They have eight legs.", vocab: ["Silk", "Eight"] }, { sentence: "Most spiders are not dangerous to us.", vocab: ["Predator", "Safe"] }] },
+                { id: "w3d4", label: "W3D4", topic: "螞蟻帝國", vid: "dTmlE9Cduj4", start: 0, tasks: [{ sentence: "Ants live together in a colony.", vocab: ["Colony", "Tunnel"] }, { sentence: "They dig tunnels under the ground.", vocab: ["Worker", "Ground"] }, { sentence: "Ants can carry very heavy things.", vocab: ["Strong", "Carry"] }] },
+                { id: "w3d5", label: "W3D5", topic: "螢火蟲之光", vid: "Y7RI1qjB2r8", start: 60, tasks: [{ sentence: "Fireflies flash their lights at night.", vocab: ["Flash", "Light"] }, { sentence: "They use light to talk to friends.", vocab: ["Signal", "Night"] }, { sentence: "The light comes from their tails.", vocab: ["Tail", "Friend"] }] }
+            ]
+        },
+        {
+            week: "Week 4: 森林動物",
+            days: [
+                { id: "w4d1", label: "W4D1", topic: "森林大貓", vid: "8cQmky_wQao", start: 45, tasks: [{ sentence: "Lions are called the king of beasts.", vocab: ["Lion", "King"] }, { sentence: "Tigers have stripes on their fur.", vocab: ["Tiger", "Fur"] }, { sentence: "Big cats are powerful predators.", vocab: ["Predator", "Roar"] }] },
+                { id: "w4d2", label: "W4D2", topic: "猩猩生活", vid: "rHhSCO5-3Pg", start: 0, tasks: [{ sentence: "Gorillas live in the deep forest.", vocab: ["Gorilla", "Forest"] }, { sentence: "They live in a group called a troop.", vocab: ["Social", "Troop"] }, { sentence: "They are very gentle giants.", vocab: ["Gentle", "Giant"] }] },
+                { id: "w4d3", label: "W4D3", topic: "無尾熊散熱", vid: "JnZTNWbQsKQ", start: 30, tasks: [{ sentence: "Koalas live in Australia.", vocab: ["Koala", "Australia"] }, { sentence: "They hug trees to stay cool.", vocab: ["Cool", "Hug"] }, { sentence: "They love to eat eucalyptus leaves.", vocab: ["Eucalyptus", "Leaf"] }] },
+                { id: "w4d4", label: "W4D4", topic: "樹懶奧秘", vid: "eq42qcpTo1o", start: 75, tasks: [{ sentence: "Sloths are the slowest mammals.", vocab: ["Sloth", "Slow"] }, { sentence: "They spend most time on branches.", vocab: ["Jungle", "Branch"] }, { sentence: "They sleep for a long time.", vocab: ["Sleep", "Time"] }] },
+                { id: "w4d5", label: "W4D5", topic: "聰明烏鴉", vid: "XofnexWvBN0", start: 45, tasks: [{ sentence: "Crows are very clever birds.", vocab: ["Crow", "Clever"] }, { sentence: "They can use tools to get food.", vocab: ["Tool", "Food"] }, { sentence: "They are good at solving problems.", vocab: ["Problem", "Brain"] }] }
+            ]
+        },
+        {
+            week: "Week 5: 人體奧秘 (一)",
+            days: [
+                { id: "w5d1", label: "W5D1", topic: "骨骼系統", vid: "B3Fv2X8EKfE", start: 60, tasks: [{ sentence: "Bones protect our brain and heart.", vocab: ["Bone", "Skeleton"] }, { sentence: "Your skeleton is like a strong frame.", vocab: ["Protect", "Frame"] }, { sentence: "Adults have two hundred and six bones.", vocab: ["Skull", "Adult"] }] },
+                { id: "w5d2", label: "W5D2", topic: "肌肉與運動", vid: "j918PoWWaB0", start: 30, tasks: [{ sentence: "Muscles pull on bones to move.", vocab: ["Muscle", "Move"] }, { sentence: "We have many muscles in our body.", vocab: ["Pull", "Body"] }, { sentence: "Exercise makes your muscles strong.", vocab: ["Strong", "Exercise"] }] },
+                { id: "w5d3", label: "W5D3", topic: "神奇大腦", vid: "V5RSpMQQOpw", start: 60, tasks: [{ sentence: "The brain controls everything we do.", vocab: ["Brain", "Think"] }, { sentence: "It sends messages to our body.", vocab: ["Message", "Control"] }, { sentence: "Our brain helps us to remember things.", vocab: ["Memory", "Remember"] }] },
+                { id: "w5d4", label: "W5D4", topic: "心臟跳動", vid: "fN1Cyr0ZK9M", start: 45, tasks: [{ sentence: "The heart pumps blood everywhere.", vocab: ["Heart", "Pump"] }, { sentence: "You can feel your heart beat.", vocab: ["Blood", "Beat"] }, { sentence: "Blood carries oxygen to your cells.", vocab: ["Oxygen", "Cell"] }] },
+                { id: "w5d5", label: "W5D5", topic: "五種感官", vid: "XtSq1wcFSEI", start: 120, tasks: [{ sentence: "We use our eyes for sight.", vocab: ["Sight", "Hearing"] }, { sentence: "Our ears help us with hearing.", vocab: ["Touch", "Smell"] }, { sentence: "The tongue is the organ for taste.", vocab: ["Taste", "Organ"] }] }
+            ]
+        },
+        {
+            week: "Week 6: 人體奧秘 (二)",
+            days: [
+                { id: "w6d1", label: "W6D1", topic: "消化過程", vid: "B3Fv2X8EKfE", start: 90, tasks: [{ sentence: "Food gives our body energy.", vocab: ["Stomach", "Energy"] }, { sentence: "We swallow food to the stomach.", vocab: ["Food", "Swallow"] }, { sentence: "The intestine absorbs nutrients.", vocab: ["Intestine", "Nutrient"] }] },
+                { id: "w6d2", label: "W6D2", topic: "眨眼秘密", vid: "V5RSpMQQOpw", start: 30, tasks: [{ sentence: "Blinking keeps our eyes wet.", vocab: ["Blink", "Eyelid"] }, { sentence: "We blink to keep out the dust.", vocab: ["Dust", "Wet"] }, { sentence: "It is a very quick movement.", vocab: ["Protect", "Quick"] }] },
+                { id: "w6d3", label: "W6D3", topic: "牙齒作用", vid: "TG3fyVOWqJY", start: 60, tasks: [{ sentence: "We use teeth to chew food.", vocab: ["Enamel", "Chew"] }, { sentence: "Enamel is the hardest part.", vocab: ["Bite", "Hardest"] }, { sentence: "Brush your teeth to keep them healthy.", vocab: ["Dentist", "Healthy"] }] },
+                { id: "w6d4", label: "W6D4", topic: "為何感冒", vid: "V5RSpMQQOpw", start: 75, tasks: [{ sentence: "Germs can make us feel sick.", vocab: ["Germ", "Virus"] }, { sentence: "Wash your hands with soap.", vocab: ["Sneeze", "Wash"] }, { sentence: "Cover your mouth when you sneeze.", vocab: ["Soap", "Mouth"] }] },
+                { id: "w6d5", label: "W6D5", topic: "睡眠重要", vid: "gqQ-XQ7P704", start: 45, tasks: [{ sentence: "Our body needs sleep to rest.", vocab: ["Sleep", "Rest"] }, { sentence: "Kids need more sleep than adults.", vocab: ["Dream", "Energy"] }, { sentence: "Dreaming happens when we are asleep.", vocab: ["Night", "Asleep"] }] }
+            ]
+        },
+        {
+            week: "Week 7: 地球科學",
+            days: [
+                { id: "w7d1", label: "W7D1", topic: "火山爆發", vid: "TuY1NhrKIeM", start: 60, tasks: [{ sentence: "Magma is hot rock inside the Earth.", vocab: ["Volcano", "Magma"] }, { sentence: "When it comes out, it is called lava.", vocab: ["Lava", "Erupt"] }, { sentence: "Volcanoes can erupt with ash and fire.", vocab: ["Ash", "Fire"] }] },
+                { id: "w7d2", label: "W7D2", topic: "水循環", vid: "fN1Cyr0ZK9M", start: 30, tasks: [{ sentence: "Water evaporates into the air.", vocab: ["Cycle", "Evaporate"] }, { sentence: "It forms clouds in the sky.", vocab: ["Cloud", "Rain"] }, { sentence: "Rain brings water back to the ground.", vocab: ["Water", "Ground"] }] },
+                { id: "w7d3", label: "W7D3", topic: "雷鳴閃電", vid: "tDoOiwNcawk", start: 60, tasks: [{ sentence: "Lightning is a flash of electricity.", vocab: ["Thunder", "Lightning"] }, { sentence: "Thunder is the sound of lightning.", vocab: ["Storm", "Electricity"] }, { sentence: "Storms can be very loud.", vocab: ["Flash", "Loud"] }] },
+                { id: "w7d4", label: "W7D4", topic: "龍捲風", vid: "-s3UwOq1P1E", start: 75, tasks: [{ sentence: "A tornado is a spinning wind.", vocab: ["Tornado", "Wind"] }, { sentence: "It is a very powerful storm.", vocab: ["Spin", "Storm"] }, { sentence: "Stay in a safe place during a tornado.", vocab: ["Safety", "Powerful"] }] },
+                { id: "w7d5", label: "W7D5", topic: "季節成因", vid: "UQjT5uKp2hg", start: 45, tasks: [{ sentence: "Earth tilts as it orbits the Sun.", vocab: ["Season", "Orbit"] }, { sentence: "Tilt causes different seasons.", vocab: ["Tilt", "Summer"] }, { sentence: "Summer is hot and winter is cold.", vocab: ["Winter", "Cold"] }] }
+            ]
+        },
+        {
+            week: "Week 8: 地球與生物",
+            days: [
+                { id: "w8d1", label: "W8D1", topic: "地球起源", vid: "fJ0J4mbj0_o", start: 60, tasks: [{ sentence: "Earth was born from dust and gas.", vocab: ["Planet", "Space"] }, { sentence: "Gravity pulled everything together.", vocab: ["Dust", "Gravity"] }, { sentence: "It took a long time to form.", vocab: ["Birth", "Form"] }] },
+                { id: "w8d2", label: "W8D2", topic: "認識岩石", vid: "TuY1NhrKIeM", start: 120, tasks: [{ sentence: "There are three main types of rocks.", vocab: ["Rock", "Igneous"] }, { sentence: "Igneous rocks come from volcanoes.", vocab: ["Sedimentary", "Metamorphic"] }, { sentence: "Rocks change over millions of years.", vocab: ["Hard", "Change"] }] },
+                { id: "w8d3", label: "W8D3", topic: "生物多樣性", vid: "Q-J2FErZHuA", start: 150, tasks: [{ sentence: "Animals live in different habitats.", vocab: ["Habitat", "Diverse"] }, { sentence: "Biodiversity means many kinds of life.", vocab: ["Species", "Nature"] }, { sentence: "We must protect our environment.", vocab: ["Environment", "Life"] }] },
+                { id: "w8d4", label: "W8D4", topic: "森林重要", vid: "Gy60BqCnTG4", start: 30, tasks: [{ sentence: "Forests give us clean air.", vocab: ["Forest", "Tree"] }, { sentence: "Many animals live in the trees.", vocab: ["Oxygen", "Animal"] }, { sentence: "Trees are a natural resource.", vocab: ["Natural", "Resource"] }] },
+                { id: "w8d5", label: "W8D5", topic: "山脈形成", vid: "Fd_XqYE2BWY", start: 60, tasks: [{ sentence: "Tectonic plates move very slowly.", vocab: ["Mountain", "Plate"] }, { sentence: "They push against each other.", vocab: ["Tectonic", "Push"] }, { sentence: "This movement creates high mountains.", vocab: ["High", "Move"] }] }
+            ]
+        },
+        {
+            week: "Week 9: 探索太空",
+            days: [
+                { id: "w9d1", label: "W9D1", topic: "太陽恆星", vid: "w36yxLgwUOc", start: 60, tasks: [{ sentence: "The Sun is at the center of our system.", vocab: ["Center", "Orbit"] }, { sentence: "All planets orbit around the Sun.", vocab: ["Energy", "Heat"] }, { sentence: "Gravity keeps everything in place.", vocab: ["Gravity", "Place"] }] },
+                { id: "w9d2", label: "W9D2", topic: "內行星", vid: "mRzasmJ_RmU", start: 30, tasks: [{ sentence: "Four inner planets have rocky surfaces.", vocab: ["Mercury", "Venus"] }, { sentence: "Mercury is the closest to the Sun.", vocab: ["Earth", "Mars"] }, { sentence: "Mars is known as the Red Planet.", vocab: ["Surface", "Planet"] }] },
+                { id: "w9d3", label: "W9D3", topic: "外行星", vid: "mRzasmJ_RmU", start: 120, tasks: [{ sentence: "The outer planets are made of gas.", vocab: ["Jupiter", "Saturn"] }, { sentence: "Jupiter is the largest planet.", vocab: ["Uranus", "Neptune"] }, { sentence: "Saturn is famous for its rings.", vocab: ["Gas", "Ring"] }] },
+                { id: "w9d4", label: "W9D4", topic: "月亮相位", vid: "ZjOmLfE-O6I", start: 180, tasks: [{ sentence: "The Moon reflects light from the Sun.", vocab: ["Reflection", "Cycle"] }, { sentence: "It takes a month to orbit Earth.", vocab: ["Full Moon", "Crescent"] }, { sentence: "The Moon's shape appears to change.", vocab: ["Orbit", "Change"] }] },
+                { id: "w9d5", label: "W9D5", topic: "住火星嗎", vid: "V5RSpMQQOpw", start: 60, tasks: [{ sentence: "Scientists want to send humans to Mars.", vocab: ["Spacecraft", "Astronaut"] }, { sentence: "The journey takes a long time.", vocab: ["Planet", "Cold"] }, { sentence: "It is a very cold and dry planet.", vocab: ["Journey", "Dry"] }] }
+            ]
+        },
+        {
+            week: "Week 10: 物理與力量",
+            days: [
+                { id: "w10d1", label: "W10D1", topic: "萬有引力", vid: "fN1Cyr0ZK9M", start: 45, tasks: [{ sentence: "Gravity is a force that pulls things.", vocab: ["Gravity", "Force"] }, { sentence: "It keeps us on the ground.", vocab: ["Pull", "Ground"] }, { sentence: "Isaac Newton discovered gravity.", vocab: ["Newton", "Discover"] }] },
+                { id: "w10d2", label: "W10D2", topic: "影子形成", vid: "fN1Cyr0ZK9M", start: 30, tasks: [{ sentence: "A shadow forms when light is blocked.", vocab: ["Shadow", "Light"] }, { sentence: "The shape changes with the light.", vocab: ["Block", "Shape"] }, { sentence: "Shadows are long in the morning.", vocab: ["Sun", "Long"] }] },
+                { id: "w10d3", label: "W10D3", topic: "簡單機械", vid: "tk9iUjMEnaY", start: 90, tasks: [{ sentence: "A lever helps us lift heavy things.", vocab: ["Lever", "Force"] }, { sentence: "It is a simple machine.", vocab: ["Lift", "Tool"] }, { sentence: "You can see levers in a playground.", vocab: ["Simple", "Playground"] }] },
+                { id: "w10d4", label: "W10D4", topic: "滑輪作用", vid: "tk9iUjMEnaY", start: 240, tasks: [{ sentence: "A pulley uses a rope and a wheel.", vocab: ["Pulley", "Rope"] }, { sentence: "It helps to raise heavy weights.", vocab: ["Wheel", "Raise"] }, { sentence: "Pulleys are used on sailboats.", vocab: ["Weight", "Sailboat"] }] },
+                { id: "w10d5", label: "W10D5", topic: "磁鐵魔力", vid: "fN1Cyr0ZK9M", start: 60, tasks: [{ sentence: "Magnets can pull certain metals.", vocab: ["Magnet", "Pull"] }, { sentence: "They have north and south poles.", vocab: ["Metal", "North"] }, { sentence: "Like poles push each other away.", vocab: ["South", "Push"] }] }
+            ]
+        },
+        {
+            week: "Week 11: 發明的故事",
+            days: [
+                { id: "w11d1", label: "W11D1", topic: "巧克力發明", vid: "Yr88rbWb-7E", start: 5, tasks: [{ sentence: "Chocolate comes from cacao beans.", vocab: ["Chocolate", "Invention"] }, { sentence: "It was once a bitter drink.", vocab: ["Bean", "Tasty"] }, { sentence: "Now it is a tasty treat for all.", vocab: ["History", "Treat"] }] },
+                { id: "w11d2", label: "W11D2", topic: "洋芋片故事", vid: "Yr88rbWb-7E", start: 292, tasks: [{ sentence: "A chef invented potato chips by accident.", vocab: ["Potato", "Snack"] }, { sentence: "They are thin, salty and crisp.", vocab: ["Invention", "Salty"] }, { sentence: "It is a very popular snack.", vocab: ["Crisp", "Popular"] }] },
+                { id: "w11d3", label: "W11D3", topic: "微波爐原理", vid: "Yr88rbWb-7E", start: 798, tasks: [{ sentence: "Microwaves heat food very fast.", vocab: ["Microwave", "Heat"] }, { sentence: "It was discovered by a scientist.", vocab: ["Invention", "Fast"] }, { sentence: "Most kitchens have a microwave today.", vocab: ["Kitchen", "Scientist"] }] },
+                { id: "w11d4", label: "W11D4", topic: "便利貼發明", vid: "nMkW5JXyclg", start: 30, tasks: [{ sentence: "The glue on the note is not too strong.", vocab: ["Sticky", "Note"] }, { sentence: "You can stick it and pull it off.", vocab: ["Glue", "Invention"] }, { sentence: "It is useful for making notes.", vocab: ["Office", "Useful"] }] },
+                { id: "w11d5", label: "W11D5", topic: "電腦運作", vid: "V5RSpMQQOpw", start: 60, tasks: [{ sentence: "Computers process a lot of data.", vocab: ["Computer", "Data"] }, { sentence: "They use a special code called binary.", vocab: ["Screen", "Code"] }, { sentence: "We use them to go on the Internet.", vocab: ["Internet", "Binary"] }] }
+            ]
+        },
+        {
+            week: "Week 12: 未來與回顧",
+            days: [
+                { id: "w12d1", label: "W12D1", topic: "自然資源", vid: "ajk-pvm5vfQ", start: 60, tasks: [{ sentence: "Nature gives us many resources.", vocab: ["Natural", "Resource"] }, { sentence: "Water and sun are natural resources.", vocab: ["Water", "Energy"] }, { sentence: "We should save our resources.", vocab: ["Save", "Earth"] }] },
+                { id: "w12d2", label: "W12D2", topic: "再生能源", vid: "ajk-pvm5vfQ", start: 180, tasks: [{ sentence: "Solar energy comes from the Sun.", vocab: ["Renewable", "Wind"] }, { sentence: "Wind power is a clean energy.", vocab: ["Solar", "Clean"] }, { sentence: "Renewable means it never runs out.", vocab: ["Earth", "Energy"] }] },
+                { id: "w12d3", label: "W12D3", topic: "減少污染", vid: "MQLadfsvfLo", start: 90, tasks: [{ sentence: "Plastic trash can hurt the ocean.", vocab: ["Pollution", "Trash"] }, { sentence: "We need to reduce our pollution.", vocab: ["Plastic", "Earth"] }, { sentence: "Take care of our beautiful Earth.", vocab: ["Care", "Ocean"] }] },
+                { id: "w12d4", label: "W12D4", topic: "未來發明", vid: "V5RSpMQQOpw", start: 60, tasks: [{ sentence: "Robots will help us in the future.", vocab: ["Future", "Robot"] }, { sentence: "Science helps us to dream big.", vocab: ["Space", "Science"] }, { sentence: "New inventions change our life.", vocab: ["Dream", "Invention"] }] },
+                { id: "w12d5", label: "W12D5", topic: "總結成就", vid: "Gy60BqCnTG4", start: 0, tasks: [{ sentence: "I finished my twelve-week plan.", vocab: ["Review", "Master"] }, { sentence: "I learned many new English words.", vocab: ["Progress", "Goal"] }, { sentence: "My English is getting much better.", vocab: ["English", "Better"] }] }
+            ]
+        }
+    ];
+
     
     function renderSidebar() {
         const menu = document.getElementById('menu');
@@ -410,3 +386,4 @@ const planData = [
 </script>
 </body>
 </html>
+
